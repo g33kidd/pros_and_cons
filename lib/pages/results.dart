@@ -37,8 +37,15 @@ class ResultsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+                  Text(
+                    "Pros (${decision.pros.length})",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   for (var p in decision.pros)
-                    Text(p.title, style: TextStyle(color: Colors.white)),
+                    Text(
+                      p.title,
+                      style: TextStyle(color: Colors.white),
+                    ),
                 ],
               ),
               SizedBox(width: 16.0),
@@ -46,14 +53,19 @@ class ResultsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+                  Text(
+                    "Cons (${decision.cons.length})",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   for (var c in decision.cons)
-                    Text(c.title, style: TextStyle(color: Colors.white)),
+                    Text(
+                      c.title,
+                      style: TextStyle(color: Colors.white),
+                    ),
                 ],
               ),
             ],
           ),
-          Text("PROS: ${decision.pros.length}"),
-          Text("CONS: ${decision.cons.length}"),
           Text("Mood: ${decision.mood}"),
           Text("Pro score: $proScore"),
           Text("Con score: $conScore"),

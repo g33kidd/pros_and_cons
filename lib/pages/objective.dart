@@ -44,6 +44,13 @@ class _ObjectivePageState extends State<ObjectivePage> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
+                contentPadding: EdgeInsets.all(16.0),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 18.0,
               ),
               onChanged: (s) {
                 setState(() {
@@ -56,7 +63,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
             Text("How are you feeling about it?", style: _headerText),
             Text("This will come in handy later.", style: _subHeaderText),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 23.0),
               child: MoodSelection(
                 onChanged: (m) {
                   setState(() {
@@ -106,6 +113,7 @@ class _MoodSelectionState extends State<MoodSelection> {
             ),
             onPressed: () => switchSentiment(Mood.HAPPY),
           ),
+          SizedBox(width: 20.0),
           IconButton(
             iconSize: 50.0,
             icon: Icon(
@@ -114,6 +122,7 @@ class _MoodSelectionState extends State<MoodSelection> {
             ),
             onPressed: () => switchSentiment(Mood.MEH),
           ),
+          SizedBox(width: 20.0),
           IconButton(
             iconSize: 50.0,
             icon: Icon(
