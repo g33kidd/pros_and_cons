@@ -40,6 +40,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
             Text("What are you making a decision on?", style: _subHeaderText),
             SizedBox(height: 32.0),
             TextField(
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,

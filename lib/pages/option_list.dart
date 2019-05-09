@@ -84,6 +84,7 @@ class _OptionListPageState extends State<OptionListPage> {
                         children: <Widget>[
                           Flexible(
                             child: TextField(
+                              textCapitalization: TextCapitalization.sentences,
                               onChanged: (s) {
                                 setState(() {
                                   options[index].title = s;
@@ -143,6 +144,7 @@ class _OptionListPageState extends State<OptionListPage> {
             RaisedButton(
               child: Text("Next"),
               onPressed: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
                 widget.pageController.nextPage(
                   duration: Duration(milliseconds: 400),
                   curve: Curves.ease,
