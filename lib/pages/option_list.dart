@@ -22,34 +22,33 @@ class OptionListPage extends StatefulWidget {
 }
 
 class _OptionListPageState extends State<OptionListPage> {
-  TextStyle _headerText = TextStyle(
-    color: Colors.white,
-    fontSize: 22.0,
-    fontWeight: FontWeight.w600,
-  );
-
-  TextStyle _subHeaderText = TextStyle(
-    color: Colors.white,
-    fontSize: 18.0,
-    fontWeight: FontWeight.w400,
-  );
-
   final listController = ScrollController();
 
   final List<Option> options = [
-    Option(title: "Make new friends", importance: 3),
-    Option(title: "Make new friends", importance: 3),
-    Option(title: "Make new friends", importance: 3),
+    Option(title: "", importance: 8),
+    Option(title: "", importance: 5),
+    Option(title: "", importance: 2),
   ];
 
   @override
   Widget build(BuildContext context) {
+    TextStyle _headerText = TextStyle(
+      fontSize: 22.0,
+      fontWeight: FontWeight.w600,
+    );
+
+    TextStyle _subHeaderText = TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w400,
+    );
+
     return Scaffold(
-      backgroundColor: Color(0xFF111111),
+      backgroundColor: Colors.transparent,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
           options.add(Option(title: "Edit me", importance: 0));
+          FocusScope.of(context).requestFocus(new FocusNode());
           setState(() {});
           listController.animateTo(
             listController.position.maxScrollExtent,
@@ -66,11 +65,6 @@ class _OptionListPageState extends State<OptionListPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Text("${widget.title}", style: _headerText),
-            SizedBox(height: 16.0),
-            Text(
-              "${widget.description}",
-              style: _subHeaderText,
-            ),
             SizedBox(height: 16.0),
             Expanded(
               child: ListView.builder(
@@ -101,7 +95,7 @@ class _OptionListPageState extends State<OptionListPage> {
                           IconButton(
                             icon: Icon(
                               Icons.delete_forever,
-                              color: Colors.red,
+                              color: Colors.red[500],
                             ),
                             onPressed: () {
                               setState(() {
@@ -116,9 +110,6 @@ class _OptionListPageState extends State<OptionListPage> {
                         children: <Widget>[
                           Text(
                             "${options[index].importance.toInt()}",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
                           ),
                           Flexible(
                             child: Slider(

@@ -12,11 +12,6 @@ class CreateScreen extends StatefulWidget {
 class _CreateScreenState extends State<CreateScreen> {
   final decision = Decision();
 
-  // TODO not quite sure if I need this yet.
-  // TextEditingController _nameTextController = TextEditingController(
-  //   text: "",
-  // );
-
   PageController pageController = PageController(
     initialPage: 0,
     keepPage: true,
@@ -25,72 +20,60 @@ class _CreateScreenState extends State<CreateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF111111),
+      resizeToAvoidBottomPadding: false,
       body: SafeArea(
-        child: PageView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: pageController,
-          children: <Widget>[
-            ObjectivePage(
-              decision: decision,
-              pageController: pageController,
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/funky-lines.png"),
+              repeat: ImageRepeat.repeat,
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.white.withOpacity(0.4),
+                BlendMode.dstATop,
+              ),
             ),
-            OptionListPage(
-              decision: decision,
-              pageController: pageController,
-              title: "Now let's make a list of pros.",
-              onChanged: (list) {
-                setState(() {
-                  decision.pros = list;
-                });
-              },
-              description:
-                  "This is a list of positive effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
-            ),
-            OptionListPage(
-              decision: decision,
-              pageController: pageController,
-              onChanged: (list) {
-                setState(() {
-                  decision.cons = list;
-                });
-              },
-              title: "Now let's make a list of cons.",
-              description:
-                  "This is a list of negative effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
-            ),
-            ResultsPage(
-              decision: decision,
-            ),
-            Container(
-              child: FlatButton(
-                child: Text(
-                  "${decision.objective} Objective! ${decision.mood} Mood!",
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(24.0),
+            child: PageView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: pageController,
+              children: <Widget>[
+                ObjectivePage(
+                  decision: decision,
+                  pageController: pageController,
                 ),
-                onPressed: () {
-                  pageController.nextPage(
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.ease,
-                  );
-                },
-              ),
+                OptionListPage(
+                  decision: decision,
+                  pageController: pageController,
+                  title: "Now let's make a list of pros.",
+                  onChanged: (list) {
+                    setState(() {
+                      decision.pros = list;
+                    });
+                  },
+                  description:
+                      "This is a list of positive effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
+                ),
+                OptionListPage(
+                  decision: decision,
+                  pageController: pageController,
+                  onChanged: (list) {
+                    setState(() {
+                      decision.cons = list;
+                    });
+                  },
+                  title: "Now let's make a list of cons.",
+                  description:
+                      "This is a list of negative effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
+                ),
+                ResultsPage(
+                  decision: decision,
+                ),
+              ],
             ),
-            Container(
-              child: FlatButton(
-                child: Text("Page 2"),
-                onPressed: () {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text("This is the last page!"),
-                  ));
-                  // pageController.animateToPage(
-                  //   2,
-                  //   duration: Duration(milliseconds: 200),
-                  //   curve: ElasticInCurve(),
-                  // );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

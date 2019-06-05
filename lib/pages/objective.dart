@@ -13,20 +13,18 @@ class ObjectivePage extends StatefulWidget {
 }
 
 class _ObjectivePageState extends State<ObjectivePage> {
-  TextStyle _headerText = TextStyle(
-    color: Colors.white,
-    fontSize: 22.0,
-    fontWeight: FontWeight.w600,
-  );
-
-  TextStyle _subHeaderText = TextStyle(
-    color: Colors.white,
-    fontSize: 18.0,
-    fontWeight: FontWeight.w400,
-  );
-
   @override
   Widget build(BuildContext context) {
+    TextStyle _headerText = TextStyle(
+      fontSize: 22.0,
+      fontWeight: FontWeight.w600,
+    );
+
+    TextStyle _subHeaderText = TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w400,
+    );
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
@@ -41,6 +39,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
             SizedBox(height: 32.0),
             TextField(
               textCapitalization: TextCapitalization.sentences,
+              maxLength: 45,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
@@ -72,14 +71,25 @@ class _ObjectivePageState extends State<ObjectivePage> {
                 },
               ),
             ),
-            RaisedButton(
-              child: Text("Next"),
-              onPressed: () {
-                widget.pageController.nextPage(
-                  duration: Duration(milliseconds: 400),
-                  curve: Curves.ease,
-                );
-              },
+            Align(
+              alignment: Alignment.bottomRight,
+              child: RaisedButton(
+                padding: EdgeInsets.all(12.0),
+                child: Text(
+                  "Next",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20.0,
+                  ),
+                ),
+                color: Color(0xFF7665E6),
+                onPressed: () {
+                  widget.pageController.nextPage(
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.ease,
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -104,27 +114,30 @@ class _MoodSelectionState extends State<MoodSelection> {
   Widget build(BuildContext context) {
     return Container(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           IconButton(
-            iconSize: 50.0,
+            iconSize: 80.0,
+            padding: EdgeInsets.zero,
             icon: Icon(
               Icons.sentiment_satisfied,
               color: (selectedMood == Mood.HAPPY ? Colors.green : Colors.grey),
             ),
             onPressed: () => switchSentiment(Mood.HAPPY),
           ),
-          SizedBox(width: 20.0),
           IconButton(
-            iconSize: 50.0,
+            iconSize: 80.0,
+            padding: EdgeInsets.zero,
             icon: Icon(
               Icons.sentiment_neutral,
-              color: (selectedMood == Mood.MEH ? Colors.yellow : Colors.grey),
+              color: (selectedMood == Mood.MEH ? Colors.orange : Colors.grey),
             ),
             onPressed: () => switchSentiment(Mood.MEH),
           ),
-          SizedBox(width: 20.0),
           IconButton(
-            iconSize: 50.0,
+            iconSize: 80.0,
+            padding: EdgeInsets.zero,
             icon: Icon(
               Icons.sentiment_dissatisfied,
               color: (selectedMood == Mood.SAD ? Colors.red : Colors.grey),
