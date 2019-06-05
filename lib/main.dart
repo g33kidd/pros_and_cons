@@ -13,8 +13,10 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: HomeScreen(),
       routes: {
-        "/home": (_) => HomeScreen(),
-        "/create": (_) => CreateScreen(),
+        "/Home": (_) => HomeScreen(),
+        "/Create": (_) => CreateScreen(),
+        // TODO create an about screen with donation
+        // "/About": (_) => AboutScreen(),
       },
     );
   }
