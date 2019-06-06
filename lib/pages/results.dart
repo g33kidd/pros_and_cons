@@ -18,49 +18,132 @@ class ResultsPage extends StatelessWidget {
       fontWeight: FontWeight.w500,
     );
 
-    return ListView(
-      children: <Widget>[
-        Text(decision.objective, style: _headerStyle),
-        SizedBox(height: 24.0),
-        
-        Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "Positives (${decision.pros.length})",
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 22.0,
-                  ),
+    TextStyle _listTextStyle = TextStyle(
+      fontSize: 18.0,
+      fontWeight: FontWeight.w400,
+      color: Colors.grey[600],
+      height: 1.2,
+    );
+
+    TextStyle _infoStyle = TextStyle(
+      fontSize: 24.0,
+      fontWeight: FontWeight.w800,
+      color: Colors.white,
+    );
+
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 24.0,
+        right: 24.0,
+        left: 24.0,
+      ),
+      child: ListView(
+        children: <Widget>[
+          Text(decision.objective, style: _headerStyle),
+          SizedBox(height: 24.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "${decision.pros.length} Positives",
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 22.0,
                 ),
-                SizedBox(
-                  height: 18.0,
-                ),
-                for (var p in decision.pros) Text(p.title),
-                SizedBox(height: 8.0),
-              ],
-            ),
-        SizedBox(height: 24.0),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Negatives (${decision.cons.length})",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 22.0,
               ),
-            ),
-            SizedBox(
-              height: 18.0,
-            ),
-            for (var c in decision.cons) Text(c.title),
-            SizedBox(height: 8.0),
-          ],
-        ),
-      ],
+              SizedBox(
+                height: 18.0,
+              ),
+              for (var p in decision.pros)
+                Text("${p.title} (${p.importance.toInt()})",
+                    style: _listTextStyle),
+              SizedBox(height: 8.0),
+            ],
+          ),
+          SizedBox(height: 18.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "${decision.cons.length} Negatives",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 22.0,
+                ),
+              ),
+              SizedBox(
+                height: 18.0,
+              ),
+              for (var c in decision.cons)
+                Text(
+                  "${c.title} (${c.importance.toInt()})",
+                  style: _listTextStyle,
+                ),
+              SizedBox(height: 8.0),
+            ],
+          ),
+          SizedBox(height: 32.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("PRO SCORE",
+                  style:
+                      TextStyle(fontSize: 22.0, fontWeight: FontWeight.w300)),
+              Text(
+                "${proScore.toInt().toString()}",
+                style: TextStyle(
+                  fontSize: 22.0,
+                  color: Colors.green[300],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("CON SCORE",
+                  style:
+                      TextStyle(fontSize: 22.0, fontWeight: FontWeight.w300)),
+              Text(
+                "${conScore.toInt().toString()}",
+                style: TextStyle(
+                  fontSize: 22.0,
+                  color: Colors.red[300],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("DECISION SCORE",
+                  style:
+                      TextStyle(fontSize: 28.0, fontWeight: FontWeight.w600)),
+              Text(
+                "${modScore.toInt().toString()}",
+                style: TextStyle(
+                  fontSize: 28.0,
+                  fontWeight: FontWeight.w800,
+                  color: (modScore > 0) ? Colors.green : Colors.red,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 24.0),
+          RaisedButton(
+            padding: EdgeInsets.symmetric(vertical: 16.0),
+            child: Text("FINISH", style: _infoStyle),
+            color: Color(0xFF7665E6),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, "/Home");
+            },
+          ),
+        ],
+      ),
     );
 
     // return Column(

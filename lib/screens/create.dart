@@ -34,45 +34,42 @@ class _CreateScreenState extends State<CreateScreen> {
               ),
             ),
           ),
-          child: Padding(
-            padding: EdgeInsets.all(24.0),
-            child: PageView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: pageController,
-              children: <Widget>[
-                ObjectivePage(
-                  decision: decision,
-                  pageController: pageController,
-                ),
-                OptionListPage(
-                  decision: decision,
-                  pageController: pageController,
-                  title: "Now let's make a list of pros.",
-                  onChanged: (list) {
-                    setState(() {
-                      decision.pros = list;
-                    });
-                  },
-                  description:
-                      "This is a list of positive effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
-                ),
-                OptionListPage(
-                  decision: decision,
-                  pageController: pageController,
-                  onChanged: (list) {
-                    setState(() {
-                      decision.cons = list;
-                    });
-                  },
-                  title: "Now let's make a list of cons.",
-                  description:
-                      "This is a list of negative effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
-                ),
-                ResultsPage(
-                  decision: decision,
-                ),
-              ],
-            ),
+          child: PageView(
+            physics: NeverScrollableScrollPhysics(),
+            controller: pageController,
+            children: <Widget>[
+              ObjectivePage(
+                decision: decision,
+                pageController: pageController,
+              ),
+              OptionListPage(
+                decision: decision,
+                pageController: pageController,
+                title: "Now let's make a list of pros.",
+                onChanged: (list) {
+                  setState(() {
+                    decision.pros = list;
+                  });
+                },
+                description:
+                    "This is a list of positive effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
+              ),
+              OptionListPage(
+                decision: decision,
+                pageController: pageController,
+                onChanged: (list) {
+                  setState(() {
+                    decision.cons = list;
+                  });
+                },
+                title: "Now let's make a list of cons.",
+                description:
+                    "This is a list of negative effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
+              ),
+              ResultsPage(
+                decision: decision,
+              ),
+            ],
           ),
         ),
       ),

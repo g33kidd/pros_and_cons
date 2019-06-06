@@ -29,7 +29,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
       behavior: HitTestBehavior.opaque,
       onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
       child: Container(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,

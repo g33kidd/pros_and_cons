@@ -30,6 +30,29 @@ class _OptionListPageState extends State<OptionListPage> {
     Option(title: "", importance: 2),
   ];
 
+  final List<TextEditingController> _textControllers = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    options.forEach((f) {
+      final controller = TextEditingController();
+      controller.text = f.title;
+      controller.addListener(() {
+        f.title = controller.text;
+      });
+      _textControllers.add(controller);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _textControllers.forEach((f) => f.dispose());
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle _headerText = TextStyle(
@@ -47,7 +70,7 @@ class _OptionListPageState extends State<OptionListPage> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () {
-          options.add(Option(title: "Edit me", importance: 0));
+          options.add(Option(title: "", importance: 2));
           FocusScope.of(context).requestFocus(new FocusNode());
           setState(() {});
           listController.animateTo(
@@ -55,11 +78,17 @@ class _OptionListPageState extends State<OptionListPage> {
             duration: Duration(milliseconds: 400),
             curve: Curves.ease,
           );
+          Option option = options.last;
+          final controller = TextEditingController();
+          controller.addListener(() {
+            option.title = controller.text;
+          });
+          _textControllers.add(controller);
           widget.onChanged(options);
         },
       ),
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -72,6 +101,8 @@ class _OptionListPageState extends State<OptionListPage> {
                 controller: listController,
                 itemCount: options.length,
                 itemBuilder: (ctx, index) {
+                  final option = options[index];
+                  final controller = _textControllers[index];
                   return Column(
                     children: <Widget>[
                       Row(
@@ -80,9 +111,9 @@ class _OptionListPageState extends State<OptionListPage> {
                             child: TextField(
                               textCapitalization: TextCapitalization.sentences,
                               onChanged: (s) {
-                                setState(() {
-                                  options[index].title = s;
-                                });
+                                controller.value = controller.value.copyWith(
+                                  text: s,
+                                );
                                 widget.onChanged(options);
                               },
                               decoration: InputDecoration(
@@ -90,6 +121,7 @@ class _OptionListPageState extends State<OptionListPage> {
                                 hintText: "Edit me!",
                                 fillColor: Colors.white,
                               ),
+                              controller: controller,
                             ),
                           ),
                           IconButton(
@@ -99,7 +131,8 @@ class _OptionListPageState extends State<OptionListPage> {
                             ),
                             onPressed: () {
                               setState(() {
-                                options.removeAt(index);
+                                options.remove(option);
+                                _textControllers.remove(controller);
                               });
                             },
                           )
@@ -108,16 +141,14 @@ class _OptionListPageState extends State<OptionListPage> {
                       SizedBox(height: 8.0),
                       Row(
                         children: <Widget>[
-                          Text(
-                            "${options[index].importance.toInt()}",
-                          ),
+                          Text("${option.importance.toInt()}"),
                           Flexible(
                             child: Slider(
-                              value: options[index].importance,
+                              value: option.importance,
                               divisions: 10,
                               onChanged: (i) {
                                 setState(() {
-                                  options[index].importance = i;
+                                  option.importance = i;
                                 });
                                 widget.onChanged(options);
                               },
@@ -133,7 +164,15 @@ class _OptionListPageState extends State<OptionListPage> {
               ),
             ),
             RaisedButton(
-              child: Text("Next"),
+              padding: EdgeInsets.all(12.0),
+              child: Text(
+                "Next",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20.0,
+                ),
+              ),
+              color: Color(0xFF7665E6),
               onPressed: () {
                 FocusScope.of(context).requestFocus(new FocusNode());
                 widget.pageController.nextPage(
