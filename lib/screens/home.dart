@@ -135,15 +135,15 @@ class _FooterState extends State<Footer> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        RaisedButton(
-          padding: EdgeInsets.symmetric(vertical: 16.0),
-          child: Text("MORE INFO", style: _infoStyle),
-          color: Color(0xFF7665E6),
-          onPressed: () {
-            Navigator.pushNamed(context, "/About");
-          },
-        ),
-        SizedBox(height: 24.0),
+        // RaisedButton(
+        //   padding: EdgeInsets.symmetric(vertical: 16.0),
+        //   child: Text("MORE INFO", style: _infoStyle),
+        //   color: Color(0xFF7665E6),
+        //   onPressed: () {
+        //     Navigator.pushNamed(context, "/About");
+        //   },
+        // ),
+        // SizedBox(height: 24.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
