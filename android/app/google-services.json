@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "186544852882",
+    "firebase_url": "https://pros-and-cons-4d0fe.firebaseio.com",
+    "project_id": "pros-and-cons-4d0fe",
+    "storage_bucket": "pros-and-cons-4d0fe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:186544852882:android:fe7b3426ccf10483",
+        "android_client_info": {
+          "package_name": "com.g33kidd.pros_cons"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "186544852882-h52vr9qe279n1a748tk9k0rnanitr8p5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCj0dLxtrEzhG_bKrsyvO0Q22KVh7g1S_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "186544852882-h52vr9qe279n1a748tk9k0rnanitr8p5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

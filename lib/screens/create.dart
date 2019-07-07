@@ -3,6 +3,7 @@ import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/pages/objective.dart';
 import 'package:pros_cons/pages/option_list.dart';
 import 'package:pros_cons/pages/results.dart';
+import 'package:ads/ads.dart';
 
 class CreateScreen extends StatefulWidget {
   @override
@@ -16,6 +17,18 @@ class _CreateScreenState extends State<CreateScreen> {
     initialPage: 0,
     keepPage: true,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    Ads.init("ca-app-pub-4846566520266716~9709175425", testing: false);
+  }
+
+  @override
+  void dispose() {
+    Ads.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +50,13 @@ class _CreateScreenState extends State<CreateScreen> {
           child: PageView(
             physics: NeverScrollableScrollPhysics(),
             controller: pageController,
+            onPageChanged: (page) {
+              if (page == 3) {
+                Ads.showFullScreenAd(
+                  adUnitId: "ca-app-pub-4846566520266716/1402723263",
+                );
+              }
+            },
             children: <Widget>[
               ObjectivePage(
                 decision: decision,
