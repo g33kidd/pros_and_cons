@@ -26,7 +26,17 @@ class HomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Header(),
-                History(),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 22.0,
+                      ),
+                      child: History(),
+                    ),
+                  ),
+                ),
                 Footer(),
               ],
             ),
@@ -41,8 +51,8 @@ class History extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle _noHistoryTextStyle = TextStyle(
-      fontSize: 18.0,
-      color: Colors.white,
+      fontSize: 22.0,
+      color: Colors.grey,
     );
     TextStyle _noHistoryButtonStyle = TextStyle(
       color: Color(0xFF7665E6),
@@ -60,8 +70,9 @@ class History extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Looks like you haven't done any pros & cons yet! How about we change that?",
+              "You don't have any history.\nHow about we change that?",
               style: _noHistoryTextStyle,
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 24.0),
             FlatButton(

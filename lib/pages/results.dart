@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/decision.dart';
 
-class ResultsPage extends StatelessWidget {
+class ResultsPage extends StatefulWidget {
   final Decision decision;
 
   ResultsPage({Key key, this.decision}) : super(key: key);
 
   @override
+  _ResultsPageState createState() => _ResultsPageState();
+}
+
+class _ResultsPageState extends State<ResultsPage> {
+  @override
   Widget build(BuildContext context) {
-    final score = decision.buildScore();
+    final score = widget.decision.buildScore();
     final proScore = score["pro"];
     final conScore = score["con"];
     final modScore = proScore - conScore;
@@ -39,14 +44,14 @@ class ResultsPage extends StatelessWidget {
       ),
       child: ListView(
         children: <Widget>[
-          Text(decision.objective, style: _headerStyle),
+          Text(widget.decision.objective, style: _headerStyle),
           SizedBox(height: 24.0),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                "${decision.pros.length} Positives",
+                "${widget.decision.pros.length} Positives",
                 style: TextStyle(
                   color: Colors.green,
                   fontSize: 22.0,
@@ -55,7 +60,7 @@ class ResultsPage extends StatelessWidget {
               SizedBox(
                 height: 18.0,
               ),
-              for (var p in decision.pros)
+              for (var p in widget.decision.pros)
                 Text("${p.title} (${p.importance.toInt()})",
                     style: _listTextStyle),
               SizedBox(height: 8.0),
@@ -67,7 +72,7 @@ class ResultsPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                "${decision.cons.length} Negatives",
+                "${widget.decision.cons.length} Negatives",
                 style: TextStyle(
                   color: Colors.red,
                   fontSize: 22.0,
@@ -76,7 +81,7 @@ class ResultsPage extends StatelessWidget {
               SizedBox(
                 height: 18.0,
               ),
-              for (var c in decision.cons)
+              for (var c in widget.decision.cons)
                 Text(
                   "${c.title} (${c.importance.toInt()})",
                   style: _listTextStyle,

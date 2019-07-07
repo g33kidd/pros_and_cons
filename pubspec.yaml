@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.2+5
+version: 1.2.0+7
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
@@ -24,6 +24,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   package_info: any
+  firebase_core: any
+  firebase_analytics: any
+  firebase_admob: any
+  ads: any
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +38,8 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/logo.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
