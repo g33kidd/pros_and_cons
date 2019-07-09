@@ -11,4 +11,8 @@ class AppModel extends ChangeNotifier {
     Decision(),
   ];
   Decision decision;
+
+  AppModel() {
+    print("Init appModel");
+  }
 }
