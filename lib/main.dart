@@ -4,6 +4,8 @@ import 'package:pros_cons/screens/about.dart';
 import 'package:pros_cons/screens/home.dart';
 import 'package:pros_cons/screens/create.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 
 void main() {
   runApp(
@@ -15,10 +17,16 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Pros & Cons",
       debugShowCheckedModeBanner: false,
+      navigatorObservers: <NavigatorObserver>[observer],
       home: HomeScreen(),
       routes: {
         "/Home": (_) => HomeScreen(),
