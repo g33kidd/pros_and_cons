@@ -4,6 +4,7 @@ import 'package:pros_cons/pages/objective.dart';
 import 'package:pros_cons/pages/option_list.dart';
 import 'package:pros_cons/pages/results.dart';
 import 'package:ads/ads.dart';
+import 'package:pros_cons/util.dart';
 
 class CreateScreen extends StatefulWidget {
   @override
@@ -16,12 +17,13 @@ class _CreateScreenState extends State<CreateScreen> {
   PageController pageController = PageController(
     initialPage: 0,
     keepPage: true,
+    viewportFraction: 1.0,
   );
 
   @override
   void initState() {
     super.initState();
-    Ads.init("ca-app-pub-4846566520266716~9709175425", testing: false);
+    Ads.init("ca-app-pub-4846566520266716~9709175425", testing: true);
   }
 
   @override
@@ -36,19 +38,9 @@ class _CreateScreenState extends State<CreateScreen> {
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/funky-lines.png"),
-              repeat: ImageRepeat.repeat,
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.4),
-                BlendMode.dstATop,
-              ),
-            ),
-          ),
+          decoration: funkyLinesDecoration,
           child: PageView(
-            physics: NeverScrollableScrollPhysics(),
+            // physics: NeverScrollableScrollPhysics(),
             controller: pageController,
             onPageChanged: (page) {
               if (page == 3) {
@@ -63,28 +55,20 @@ class _CreateScreenState extends State<CreateScreen> {
                 pageController: pageController,
               ),
               OptionListPage(
-                decision: decision,
                 pageController: pageController,
-                title: "Now let's make a list of pros.",
                 onChanged: (list) {
                   setState(() {
                     decision.pros = list;
                   });
                 },
-                description:
-                    "This is a list of positive effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
               ),
               OptionListPage(
-                decision: decision,
                 pageController: pageController,
                 onChanged: (list) {
                   setState(() {
                     decision.cons = list;
                   });
                 },
-                title: "Now let's make a list of cons.",
-                description:
-                    "This is a list of negative effects this might have on your life. Use the button to add as many as you like, but try to aim for at least 5.",
               ),
               ResultsPage(
                 decision: decision,
