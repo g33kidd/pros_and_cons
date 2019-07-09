@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:pros_cons/model/app_model.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -55,22 +57,24 @@ class History extends StatelessWidget {
       elevation: 3.0,
       child: Container(
         padding: EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "Looks like you haven't done any pros & cons yet! How about we change that?",
-              style: _noHistoryTextStyle,
-            ),
-            SizedBox(height: 24.0),
-            FlatButton(
-              child: Text("GET STARTED", style: _noHistoryButtonStyle),
-              onPressed: () {
-                Navigator.pushNamed(context, "/Create");
-              },
-            ),
-          ],
+        child: Consumer<AppModel>(
+          builder: (context, app, other) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "Looks like you haven't done any pros & cons yet! How about we change that?",
+                style: _noHistoryTextStyle,
+              ),
+              SizedBox(height: 24.0),
+              FlatButton(
+                child: Text("GET STARTED", style: _noHistoryButtonStyle),
+                onPressed: () {
+                  Navigator.pushNamed(context, "/Create");
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,12 +1,19 @@
+enum OptionType { PRO, CON }
+enum Mood { HAPPY, MEH, SAD }
+
 class Decision {
-  bool singleObjective = true;
+  DateTime created;
   String objective = "";
-  List<String> objectives = [];
   Mood mood = Mood.HAPPY;
+
+  List<Option> arguments = [];
   List<Option> pros = [];
   List<Option> cons = [];
   double proScore = 0;
   double conScore = 0;
+
+  List<Option> get getPros => arguments.where((o) => o.type == OptionType.PRO);
+  List<Option> get getCons => arguments.where((o) => o.type == OptionType.CON);
 
   Map<String, double> buildScore() {
     double pscore = 0;
@@ -30,14 +37,9 @@ class Decision {
 }
 
 class Option {
+  OptionType type = OptionType.PRO;
   String title = "";
   double importance = 0;
 
-  Option({this.title, this.importance});
-}
-
-enum Mood {
-  HAPPY,
-  MEH,
-  SAD,
+  Option({this.title, this.importance, this.type});
 }
