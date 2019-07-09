@@ -12,8 +12,14 @@ class Decision {
   double proScore = 0;
   double conScore = 0;
 
+  String get key => created.toIso8601String();
+
   List<Option> get getPros => arguments.where((o) => o.type == OptionType.PRO);
   List<Option> get getCons => arguments.where((o) => o.type == OptionType.CON);
+
+  Decision() {
+    created = DateTime.now();
+  }
 
   Map<String, double> buildScore() {
     double pscore = 0;

@@ -29,6 +29,7 @@ dependencies:
   firebase_analytics: any
   firebase_admob: any
   ads: any
+  flutter_fluid_slider: ^1.0.1
 
 dev_dependencies:
   flutter_test:

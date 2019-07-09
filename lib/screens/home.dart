@@ -54,10 +54,11 @@ class History extends StatelessWidget {
   Widget build(BuildContext context) {
     TextStyle _noHistoryTextStyle = TextStyle(
       fontSize: 22.0,
-      color: Colors.grey,
+      color: Colors.white,
+      height: 1.2,
     );
     TextStyle _noHistoryButtonStyle = TextStyle(
-      color: Color(0xFF7665E6),
+      color: Colors.white,
       fontSize: 24.0,
     );
 
@@ -66,22 +67,30 @@ class History extends StatelessWidget {
       margin: EdgeInsets.zero,
       elevation: 3.0,
       child: Container(
-        padding: EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(28.0),
         child: Consumer<AppModel>(
           builder: (context, app, other) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                "Looks like you haven't done any pros & cons yet! How about we change that?",
-                style: _noHistoryTextStyle,
+              Center(
+                child: Text(
+                  "Looks like you haven't done any pros & cons yet!\nHow about we change that?\n\nHistory will show up here.",
+                  style: _noHistoryTextStyle,
+                  textAlign: TextAlign.center,
+                ),
               ),
               SizedBox(height: 24.0),
-              FlatButton(
-                child: Text("GET STARTED", style: _noHistoryButtonStyle),
-                onPressed: () {
-                  Navigator.pushNamed(context, "/Create");
-                },
+              Container(
+                width: double.infinity,
+                height: 60,
+                child: RaisedButton(
+                  color: Color(0xFF7665E6),
+                  child: Text("GET STARTED", style: _noHistoryButtonStyle),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/Create");
+                  },
+                ),
               ),
             ],
           ),
@@ -126,10 +135,7 @@ class _FooterState extends State<Footer> {
   @override
   void initState() {
     super.initState();
-    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      version = packageInfo.version;
-      buildNumber = packageInfo.buildNumber;
-    });
+    getPackageInfo();
   }
 
   @override
@@ -139,25 +145,10 @@ class _FooterState extends State<Footer> {
       color: Colors.grey[500],
     );
 
-    TextStyle _infoStyle = TextStyle(
-      fontSize: 24.0,
-      fontWeight: FontWeight.w800,
-      color: Colors.white,
-    );
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        // RaisedButton(
-        //   padding: EdgeInsets.symmetric(vertical: 16.0),
-        //   child: Text("MORE INFO", style: _infoStyle),
-        //   color: Color(0xFF7665E6),
-        //   onPressed: () {
-        //     Navigator.pushNamed(context, "/About");
-        //   },
-        // ),
-        // SizedBox(height: 24.0),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -167,5 +158,13 @@ class _FooterState extends State<Footer> {
         ),
       ],
     );
+  }
+
+  Future getPackageInfo() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      version = packageInfo.version;
+      buildNumber = packageInfo.buildNumber;
+    });
   }
 }

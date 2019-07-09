@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:pros_cons/model/decision.dart';
 
 class ObjectivePage extends StatefulWidget {
-  Decision decision;
-  PageController pageController;
+  final Decision decision;
+  final PageController pageController;
 
-  ObjectivePage({Key key, this.decision, this.pageController})
-      : super(key: key);
+  ObjectivePage({
+    Key key,
+    this.decision,
+    this.pageController,
+  }) : super(key: key);
 
   @override
   _ObjectivePageState createState() => _ObjectivePageState();
@@ -70,27 +73,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
                   });
                 },
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: RaisedButton(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                  "Next",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
-                ),
-                color: Color(0xFF7665E6),
-                onPressed: () {
-                  widget.pageController.nextPage(
-                    duration: Duration(milliseconds: 400),
-                    curve: Curves.ease,
-                  );
-                },
-              ),
-            ),
+            )
           ],
         ),
       ),
