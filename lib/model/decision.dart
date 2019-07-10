@@ -14,8 +14,10 @@ class Decision {
 
   String get key => created.toIso8601String();
 
-  List<Option> get getPros => arguments.where((o) => o.type == OptionType.PRO);
-  List<Option> get getCons => arguments.where((o) => o.type == OptionType.CON);
+  List<Option> get getPros =>
+      arguments.where((o) => o.type == OptionType.PRO).toList();
+  List<Option> get getCons =>
+      arguments.where((o) => o.type == OptionType.CON).toList();
 
   Decision() {
     created = DateTime.now();
@@ -25,10 +27,10 @@ class Decision {
     double pscore = 0;
     double cscore = 0;
 
-    pros.forEach((p) {
+    getPros.forEach((p) {
       pscore += p.importance;
     });
-    cons.forEach((p) {
+    getCons.forEach((p) {
       cscore += p.importance;
     });
 

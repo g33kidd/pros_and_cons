@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pros_cons/model/app_model.dart';
@@ -75,7 +76,7 @@ class History extends StatelessWidget {
             children: <Widget>[
               Center(
                 child: Text(
-                  "Looks like you haven't done any pros & cons yet!\nHow about we change that?\n\nHistory will show up here.",
+                  "Go ahead and press the button below to start a Pros & Cons list. It's very easy!\n\nHistory coming soon!",
                   style: _noHistoryTextStyle,
                   textAlign: TextAlign.center,
                 ),
@@ -88,6 +89,8 @@ class History extends StatelessWidget {
                   color: Color(0xFF7665E6),
                   child: Text("GET STARTED", style: _noHistoryButtonStyle),
                   onPressed: () {
+                    FirebaseAnalytics().logEvent(name: "get_started");
+                    app.newDecision();
                     Navigator.pushNamed(context, "/Create");
                   },
                 ),

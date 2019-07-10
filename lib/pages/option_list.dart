@@ -5,13 +5,11 @@ import 'package:pros_cons/widgets/argument_editor.dart';
 import 'package:provider/provider.dart';
 
 class OptionListPage extends StatefulWidget {
-  final PageController pageController;
   final Function onChanged;
 
   OptionListPage({
     Key key,
-    @required this.pageController,
-    @required this.onChanged,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -48,11 +46,17 @@ class _OptionListPageState extends State<OptionListPage> {
                       final index = options.indexOf(f);
                       return ArgumentEditor(
                         option: f,
-                        onImportanceUpdate: (double value) {},
+                        onImportanceUpdate: (double value) {
+                          f.importance = value;
+                          app.updateOption(index, f);
+                        },
                         onDeletePressed: () {
                           app.deleteOptionAt(index);
                         },
-                        onTextChanged: (String value) {},
+                        onTextChanged: (String value) {
+                          f.title = value;
+                          app.updateOption(index, f);
+                        },
                         onTypeChanged: (OptionType type) {
                           f.type = type;
                           app.updateOption(index, f);
@@ -60,11 +64,12 @@ class _OptionListPageState extends State<OptionListPage> {
                       );
                     }).toList(),
                     // TODO make this better
-                    IconButton(
+                    FlatButton.icon(
                       icon: Icon(
                         Icons.add_box,
                         size: 32.0,
                       ),
+                      label: Text("Add Argument"),
                       onPressed: () => app.addOption(),
                     ),
                   ],
@@ -75,30 +80,5 @@ class _OptionListPageState extends State<OptionListPage> {
         ],
       ),
     );
-
-    // return Scaffold(
-    //   backgroundColor: Colors.transparent,
-    //   floatingActionButton: FloatingActionButton(
-    //     child: Icon(Icons.add),
-    //     onPressed: () {
-    //       options.add(Option(title: "", importance: 2));
-    //       FocusScope.of(context).requestFocus(new FocusNode());
-    //       setState(() {});
-    //       listController.animateTo(
-    //         listController.position.maxScrollExtent,
-    //         duration: Duration(milliseconds: 400),
-    //         curve: Curves.ease,
-    //       );
-    //       Option option = options.last;
-    //       final controller = TextEditingController();
-    //       controller.addListener(() {
-    //         option.title = controller.text;
-    //       });
-    //       _textControllers.add(controller);
-    //       widget.onChanged(options);
-    //     },
-    //   ),
-    //   body: ,
-    // );
   }
 }

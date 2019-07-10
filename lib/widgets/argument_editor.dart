@@ -99,7 +99,6 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
     _textEditingController.value =
         _textEditingController.value.copyWith(text: value);
 
-    // TODO idk if needed yet
     widget.onTextChanged(_textEditingController.value.text);
   }
 
