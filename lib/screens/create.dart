@@ -29,14 +29,9 @@ class _CreateScreenState extends State<CreateScreen> {
   void initState() {
     super.initState();
 
-    _ads = Ads(
-      "ca-app-pub-4846566520266716~9709175425",
-      testing: false,
-    );
-
-    _ads.setFullScreenAd(
-      adUnitId: "ca-app-pub-4846566520266716/1402723263",
-    );
+    _ads = Ads("ca-app-pub-4846566520266716~9709175425", testing: true);
+    _ads.setFullScreenAd(adUnitId: "ca-app-pub-4846566520266716/1402723263");
+    _ads.setBannerAd(adUnitId: "ca-app-pub-4846566520266716/6725176015");
   }
 
   bool get isNext => (_page < 2);
@@ -120,7 +115,10 @@ class _CreateScreenState extends State<CreateScreen> {
             setState(() {
               _page = page;
               if (page == 2) {
-                _ads.showFullScreenAd(state: this);
+                _ads.showFullScreenAd(
+                  state: this,
+                  adUnitId: "ca-app-pub-4846566520266716/1402723263",
+                );
               }
             });
           },
