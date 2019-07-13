@@ -9,8 +9,6 @@ import 'package:ads/ads.dart';
 import 'package:pros_cons/util.dart';
 import 'package:provider/provider.dart';
 
-final Color purp = Color(0xFF7665E6);
-
 class CreateScreen extends StatefulWidget {
   @override
   _CreateScreenState createState() => _CreateScreenState();
@@ -51,7 +49,7 @@ class _CreateScreenState extends State<CreateScreen> {
         title: Text(
           "PROS & CONS",
           style: TextStyle(
-            color: purp,
+            color: purple,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -74,13 +72,13 @@ class _CreateScreenState extends State<CreateScreen> {
             child: FlatButton.icon(
               icon: Icon(
                 isNext ? Icons.arrow_forward : Icons.done,
-                color: purp,
+                color: purple,
                 size: 24.0,
               ),
               label: Text(
                 isNext ? "NEXT" : "FINISH",
                 style: TextStyle(
-                  color: purp,
+                  color: purple,
                   fontSize: 22.0,
                 ),
               ),
