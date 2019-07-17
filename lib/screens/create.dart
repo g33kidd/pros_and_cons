@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
@@ -78,13 +80,13 @@ class _CreateScreenState extends State<CreateScreen> {
                 size: 24.0,
               ),
               label: Text(
-                isNext ? "NEXT" : "FINISH",
+                isNext ? "NEXT" : "SAVE & FINISH",
                 style: TextStyle(
                   color: purp,
                   fontSize: 22.0,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (_page == 2) {
                   FirebaseAnalytics().logEvent(name: "finish", parameters: {
                     'descision_objective': app.decision.objective,
@@ -92,6 +94,20 @@ class _CreateScreenState extends State<CreateScreen> {
                     'decision_pros': app.decision.getPros.length,
                     'decision_mood': app.decision.mood.toString(),
                   });
+                  Firestore.instance.collection('decisions').add(
+                    {
+                      'objective': app.decision.objective,
+                      'mood': describeEnum(app.decision.mood),
+                      'udid': app.udid,
+                      'arguments': app.decision.arguments.map(
+                        (a) => {
+                          'title': a.title,
+                          'importance': a.importance,
+                          'type': describeEnum(a.type),
+                        },
+                      ),
+                    },
+                  );
                   app.newDecision();
                   Navigator.pushReplacementNamed(context, "/Home");
                 } else {

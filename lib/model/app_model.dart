@@ -3,8 +3,11 @@ import 'dart:collection';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/decision.dart';
+import 'package:flutter_udid/flutter_udid.dart';
 
 class AppModel extends ChangeNotifier {
+  String udid;
+
   List<Decision> history = [
     Decision(),
     Decision(),
@@ -23,6 +26,8 @@ class AppModel extends ChangeNotifier {
       decision.arguments.where((d) => d.type == OptionType.PRO));
 
   AppModel() {
+    FlutterUdid.udid.then((_udid) => udid = _udid);
+
     // Creates a new default decision
     decision = Decision();
     // decision.objective = "Test";

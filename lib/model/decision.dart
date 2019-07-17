@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 enum OptionType { PRO, CON }
 enum Mood { HAPPY, MEH, SAD }
 
@@ -16,6 +18,7 @@ class Decision {
 
   List<Option> get getPros =>
       arguments.where((o) => o.type == OptionType.PRO).toList();
+
   List<Option> get getCons =>
       arguments.where((o) => o.type == OptionType.CON).toList();
 
@@ -42,6 +45,32 @@ class Decision {
       "con": cscore,
     };
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'objective': objective,
+      'mood': describeEnum(mood),
+      'arguments': arguments.map
+    };
+  }
+
+  static Decision fromMap(Map<String, dynamic> map) {
+    Decision decision = Decision();
+    decision.objective = map['objective'];
+    decision.mood = getMoodFromString(map['mood']);
+    decision.arguments = map['arguments'];
+    return decision;
+  }
+}
+
+Mood getMoodFromString(String value) {
+  return Mood.values.firstWhere((f) => describeEnum(f) == value.toLowerCase());
+}
+
+OptionType getOptionTypeFromString(String value) {
+  return OptionType.values.firstWhere(
+    (f) => describeEnum(f) == value.toLowerCase(),
+  );
 }
 
 class Option {
@@ -50,4 +79,20 @@ class Option {
   double importance = 0;
 
   Option({this.title, this.importance, this.type});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'type': describeEnum(type),
+      'title': title,
+      'importance': importance,
+    };
+  }
+
+  static Option fromMap(Map<String, dynamic> map) {
+    return Option(
+      title: map['title'],
+      importance: map['importance'],
+      type: getOptionTypeFromString(map['type']),
+    );
+  }
 }

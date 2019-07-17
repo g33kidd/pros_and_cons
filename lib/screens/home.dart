@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -74,6 +75,35 @@ class History extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              StreamBuilder(
+                stream: Firestore.instance
+                    .collection('decisions')
+                    .where('udid', isEqualTo: app.udid)
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError)
+                    return Text("Whoops... Something went wrong!");
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.none:
+                      return CircularProgressIndicator();
+                      break;
+                    case ConnectionState.waiting:
+                      return CircularProgressIndicator();
+                      break;
+                    case ConnectionState.active:
+                      return CircularProgressIndicator();
+                      break;
+                    case ConnectionState.done:
+                      return ListView(
+                        children:
+                            snapshot.data.documents.map((DocumentSnapshot doc) {
+                          return Text("${doc['objective']}");
+                        }).toList(),
+                      );
+                      break;
+                  }
+                },
+              ),
               Center(
                 child: Text(
                   "Go ahead and press the button below to start a Pros & Cons list. It's very easy!\n\nHistory coming soon!",
