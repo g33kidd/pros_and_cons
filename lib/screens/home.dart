@@ -1,50 +1,221 @@
+import 'package:ads/ads.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
+import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/model/app_model.dart';
+import 'package:pros_cons/model/decision.dart';
+import 'package:pros_cons/widgets/app_drawer.dart';
+import 'package:pros_cons/widgets/no_history.dart';
+import 'package:pros_cons/widgets/totd.dart';
 import 'package:provider/provider.dart';
+import 'package:pros_cons/util.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  Ads _ads;
+  final bool testing = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Why isn't this working???
+    _ads = Ads(
+      "ca-app-pub-4846566520266716~9709175425",
+      testing: testing,
+      bannerUnitId: "ca-app-pub-4846566520266716/6725176015",
+    );
+
+    FirebaseAuth.instance.signInAnonymously().then((data) {
+      print(data.providerId);
+      print("Logged in anonymously!");
+      // _ads.showBannerAd();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final app = Provider.of<AppModel>(context);
+
+    final _titleStyle = TextStyle(
+      color: Colors.white,
+      // fontSize: 22.0,
+      fontWeight: FontWeight.w800,
+    );
+    TextStyle _noHistoryTextStyle = TextStyle(
+      fontSize: 22.0,
+      height: 1.2,
+    );
+
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/funky-lines.png"),
-              repeat: ImageRepeat.repeat,
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.4),
-                BlendMode.dstATop,
+      appBar: AppBar(
+        backgroundColor: purple,
+        title: Text("PROS & CONS", style: _titleStyle),
+        elevation: 0,
+      ),
+      drawer: AppDrawer(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          // TipOfTheDay(),
+          Expanded(
+            child: StreamBuilder(
+              stream: Firestore.instance
+                  .collection('decisions')
+                  .where('udid', isEqualTo: app.udid)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError)
+                  return Text("Whoops... Something went wrong!");
+
+                if (snapshot.hasData) {
+                  if (snapshot.data.documents.length == 0) {
+                    return NoHistory();
+                  } else {
+                    return ListView(
+                      padding: EdgeInsets.all(12.0),
+                      shrinkWrap: true,
+                      children: <Widget>[
+                        NewDecisionButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/Create");
+                          },
+                        ),
+                        ...snapshot.data.documents.map(
+                          (DocumentSnapshot doc) {
+                            final decision = Decision.fromMap(doc.data);
+                            return HistoryItem(decision: decision);
+                          },
+                        ).toList()
+                      ],
+                    );
+                  }
+                } else {
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// class HomeScreen extends StatefulWidget {
+//   @override
+//   _HomeScreenState createState() => _HomeScreenState();
+// }
+
+// class _HomeScreenState extends State<HomeScreen> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     FirebaseAuth.instance.signInAnonymously().then((data) {
+//       print(data.providerId);
+//       print("Logged in anonymously!");
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final app = Provider.of<AppModel>(context);
+
+//     return Scaffold(
+//       resizeToAvoidBottomPadding: false,
+//       body: SafeArea(
+//         child: Container(
+//           decoration: BoxDecoration(
+//             image: DecorationImage(
+//               image: AssetImage("assets/funky-lines.png"),
+//               repeat: ImageRepeat.repeat,
+//               fit: BoxFit.cover,
+//               colorFilter: ColorFilter.mode(
+//                 Colors.white.withOpacity(0.4),
+//                 BlendMode.dstATop,
+//               ),
+//             ),
+//           ),
+//           child: Padding(
+//             padding: EdgeInsets.all(24.0),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: <Widget>[
+//                 Header(),
+//                 Expanded(
+//                   child: Container(
+//                     width: double.infinity,
+//                     child: Padding(
+//                       padding: EdgeInsets.symmetric(
+//                         vertical: 22.0,
+//                       ),
+//                       child: app.udid != ''
+//                           ? History()
+//                           : CircularProgressIndicator(),
+//                     ),
+//                   ),
+//                 ),
+//                 Footer(),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class HistoryItem extends StatelessWidget {
+  final Decision decision;
+
+  HistoryItem({Key key, this.decision}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("History detailed info is coming soon!"),
+          behavior: SnackBarBehavior.floating,
+        ));
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        width: double.infinity,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              decision.totalScore.toStringAsFixed(0),
+              style: TextStyle(
+                fontSize: 22.0,
+                color: (decision.totalScore > 0) ? Colors.green : Colors.red,
+                fontWeight: FontWeight.w800,
               ),
             ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Header(),
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 22.0,
-                      ),
-                      child: History(),
-                    ),
-                  ),
-                ),
-                Footer(),
-              ],
+            Text(
+              "${decision.objective}",
+              overflow: TextOverflow.fade,
+              maxLines: 1,
+              softWrap: false,
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.blueGrey[500],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -52,6 +223,10 @@ class HomeScreen extends StatelessWidget {
 }
 
 class History extends StatelessWidget {
+  final Function onPressed;
+
+  History({Key key, this.onPressed});
+
   @override
   Widget build(BuildContext context) {
     TextStyle _noHistoryTextStyle = TextStyle(
@@ -59,6 +234,7 @@ class History extends StatelessWidget {
       color: Colors.white,
       height: 1.2,
     );
+
     TextStyle _noHistoryButtonStyle = TextStyle(
       color: Colors.white,
       fontSize: 24.0,
@@ -75,6 +251,20 @@ class History extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Container(
+                width: double.infinity,
+                height: 60,
+                child: RaisedButton(
+                  color: Color(0xFF7665E6),
+                  child: Text("NEW DECISION", style: _noHistoryButtonStyle),
+                  onPressed: () {
+                    FirebaseAnalytics().logEvent(name: "get_started");
+                    app.newDecision();
+                    Navigator.pushNamed(context, "/Create");
+                  },
+                ),
+              ),
+              SizedBox(height: 24.0),
               StreamBuilder(
                 stream: Firestore.instance
                     .collection('decisions')
@@ -83,47 +273,39 @@ class History extends StatelessWidget {
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError)
                     return Text("Whoops... Something went wrong!");
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      return CircularProgressIndicator();
-                      break;
-                    case ConnectionState.waiting:
-                      return CircularProgressIndicator();
-                      break;
-                    case ConnectionState.active:
-                      return CircularProgressIndicator();
-                      break;
-                    case ConnectionState.done:
-                      return ListView(
-                        children:
-                            snapshot.data.documents.map((DocumentSnapshot doc) {
-                          return Text("${doc['objective']}");
-                        }).toList(),
+
+                  if (snapshot.hasData) {
+                    if (snapshot.data.documents.length == 0) {
+                      return Center(
+                        child: Text(
+                          "Press the button above to start a new Pros & Cons list.\n\nPast decisions will show here.",
+                          style: _noHistoryTextStyle,
+                          textAlign: TextAlign.center,
+                        ),
                       );
-                      break;
+                    } else {
+                      return Expanded(
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: snapshot.data.documents.map(
+                            (DocumentSnapshot doc) {
+                              final decision = Decision.fromMap(doc.data);
+                              return HistoryItem(decision: decision);
+                            },
+                          ).toList(),
+                        ),
+                      );
+                    }
+                  } else {
+                    return Center(
+                      child: Text(
+                        "Press the button above to start a new Pros & Cons list.\n\nPast decisions will show here.",
+                        style: _noHistoryTextStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                    );
                   }
                 },
-              ),
-              Center(
-                child: Text(
-                  "Go ahead and press the button below to start a Pros & Cons list. It's very easy!\n\nHistory coming soon!",
-                  style: _noHistoryTextStyle,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(height: 24.0),
-              Container(
-                width: double.infinity,
-                height: 60,
-                child: RaisedButton(
-                  color: Color(0xFF7665E6),
-                  child: Text("GET STARTED", style: _noHistoryButtonStyle),
-                  onPressed: () {
-                    FirebaseAnalytics().logEvent(name: "get_started");
-                    app.newDecision();
-                    Navigator.pushNamed(context, "/Create");
-                  },
-                ),
               ),
             ],
           ),
@@ -153,51 +335,5 @@ class Header extends StatelessWidget {
         Text("Let's help you make a decision!", style: _subheaderStyle),
       ],
     );
-  }
-}
-
-class Footer extends StatefulWidget {
-  @override
-  _FooterState createState() => _FooterState();
-}
-
-class _FooterState extends State<Footer> {
-  String version = "";
-  String buildNumber = "";
-
-  @override
-  void initState() {
-    super.initState();
-    getPackageInfo();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    TextStyle _footerStyle = TextStyle(
-      fontSize: 12.0,
-      color: Colors.grey[500],
-    );
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text("Made with ❤️ by g33kidd.", style: _footerStyle),
-            Text("Version $version+$buildNumber", style: _footerStyle),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Future getPackageInfo() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      version = packageInfo.version;
-      buildNumber = packageInfo.buildNumber;
-    });
   }
 }

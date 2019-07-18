@@ -3,6 +3,16 @@ import 'package:flutter/foundation.dart';
 enum OptionType { PRO, CON }
 enum Mood { HAPPY, MEH, SAD }
 
+Mood getMoodFromString(String value) {
+  return Mood.values.firstWhere((f) => describeEnum(f) == value.toLowerCase());
+}
+
+OptionType getOptionTypeFromString(String value) {
+  return OptionType.values.firstWhere(
+    (f) => describeEnum(f).toLowerCase() == value.toLowerCase(),
+  );
+}
+
 class Decision {
   DateTime created;
   String objective = "";
@@ -13,6 +23,7 @@ class Decision {
   List<Option> cons = [];
   double proScore = 0;
   double conScore = 0;
+  double totalScore = 0;
 
   String get key => created.toIso8601String();
 
@@ -39,10 +50,12 @@ class Decision {
 
     proScore = pscore;
     conScore = cscore;
+    totalScore = proScore - conScore;
 
     return {
       "pro": pscore,
       "con": cscore,
+      "total": totalScore,
     };
   }
 
@@ -50,27 +63,26 @@ class Decision {
     return {
       'objective': objective,
       'mood': describeEnum(mood),
-      'arguments': arguments.map
+      'arguments': arguments.map((a) => a.toMap())
     };
   }
 
-  static Decision fromMap(Map<String, dynamic> map) {
+  static Decision fromMap(Map<String, dynamic> doc) {
     Decision decision = Decision();
-    decision.objective = map['objective'];
-    decision.mood = getMoodFromString(map['mood']);
-    decision.arguments = map['arguments'];
+    decision.objective = doc['objective'];
+    // decision.mood = getMoodFromString(doc['mood']);
+    decision.conScore = doc['score']['con'];
+    decision.proScore = doc['score']['pro'];
+    decision.totalScore = doc['score']['total'];
+    doc['arguments'].forEach((f) {
+      decision.arguments.add(Option(
+        title: f['title'],
+        type: getOptionTypeFromString(f['type']),
+        importance: f['importance'],
+      ));
+    });
     return decision;
   }
-}
-
-Mood getMoodFromString(String value) {
-  return Mood.values.firstWhere((f) => describeEnum(f) == value.toLowerCase());
-}
-
-OptionType getOptionTypeFromString(String value) {
-  return OptionType.values.firstWhere(
-    (f) => describeEnum(f) == value.toLowerCase(),
-  );
 }
 
 class Option {

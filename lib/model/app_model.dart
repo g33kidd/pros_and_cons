@@ -26,7 +26,10 @@ class AppModel extends ChangeNotifier {
       decision.arguments.where((d) => d.type == OptionType.PRO));
 
   AppModel() {
-    FlutterUdid.udid.then((_udid) => udid = _udid);
+    FlutterUdid.udid.then((_udid) {
+      udid = _udid;
+      print(_udid);
+    });
 
     // Creates a new default decision
     decision = Decision();

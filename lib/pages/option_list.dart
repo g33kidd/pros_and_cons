@@ -17,6 +17,8 @@ class OptionListPage extends StatefulWidget {
 }
 
 class _OptionListPageState extends State<OptionListPage> {
+  final List<FocusNode> focusNodes = <FocusNode>[];
+
   @override
   void initState() {
     super.initState();
@@ -40,12 +42,15 @@ class _OptionListPageState extends State<OptionListPage> {
                 final options = app.options;
                 return ListView(
                   shrinkWrap: true,
+                  // reverse: true,
                   children: <Widget>[
                     SizedBox(height: 24),
                     ...options.map((f) {
                       final index = options.indexOf(f);
+
                       return ArgumentEditor(
                         option: f,
+                        focusNode: focusNodes[index],
                         onImportanceUpdate: (double value) {
                           f.importance = value;
                           app.updateOption(index, f);
@@ -64,14 +69,26 @@ class _OptionListPageState extends State<OptionListPage> {
                       );
                     }).toList(),
                     // TODO make this better
+                    SizedBox(height: 12.0),
+
                     FlatButton.icon(
                       icon: Icon(
                         Icons.add_box,
                         size: 32.0,
                       ),
-                      label: Text("Add Argument"),
-                      onPressed: () => app.addOption(),
+                      label: Text("Add Argument",
+                          style: TextStyle(fontSize: 22.0)),
+                      onPressed: () {
+                        final newNode = FocusNode();
+                        focusNodes.add(newNode);
+                        app.addOption();
+                        Future.delayed(
+                          Duration(milliseconds: 200),
+                          () => newNode.requestFocus(),
+                        );
+                      },
                     ),
+                    SizedBox(height: 25.0),
                   ],
                 );
               },

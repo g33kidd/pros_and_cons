@@ -11,14 +11,13 @@ import 'package:ads/ads.dart';
 import 'package:pros_cons/util.dart';
 import 'package:provider/provider.dart';
 
-final Color purp = Color(0xFF7665E6);
-
 class CreateScreen extends StatefulWidget {
   @override
   _CreateScreenState createState() => _CreateScreenState();
 }
 
 class _CreateScreenState extends State<CreateScreen> {
+  final bool testing = true;
   int _page = 0;
   Ads _ads;
   PageController pageController = PageController(
@@ -31,16 +30,17 @@ class _CreateScreenState extends State<CreateScreen> {
   void initState() {
     super.initState();
 
-    _ads = Ads("ca-app-pub-4846566520266716~9709175425", testing: true);
-    _ads.setFullScreenAd(adUnitId: "ca-app-pub-4846566520266716/1402723263");
-    _ads.setBannerAd(adUnitId: "ca-app-pub-4846566520266716/6725176015");
+    _ads = Ads("ca-app-pub-4846566520266716~9709175425", testing: testing);
+    _ads.setFullScreenAd(
+      adUnitId: "ca-app-pub-4846566520266716/1402723263",
+      testing: testing,
+    );
   }
 
   bool get isNext => (_page < 2);
 
   @override
   void dispose() {
-    _ads.dispose();
     super.dispose();
   }
 
@@ -49,11 +49,12 @@ class _CreateScreenState extends State<CreateScreen> {
     final app = Provider.of<AppModel>(context);
     return Scaffold(
       resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(
           "PROS & CONS",
           style: TextStyle(
-            color: purp,
+            color: purple,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -75,14 +76,14 @@ class _CreateScreenState extends State<CreateScreen> {
             alignment: Alignment.bottomRight,
             child: FlatButton.icon(
               icon: Icon(
-                isNext ? Icons.arrow_forward : Icons.done,
-                color: purp,
+                isNext ? Icons.arrow_forward : Icons.save,
+                color: purple,
                 size: 24.0,
               ),
               label: Text(
                 isNext ? "NEXT" : "SAVE & FINISH",
                 style: TextStyle(
-                  color: purp,
+                  color: purple,
                   fontSize: 22.0,
                 ),
               ),
@@ -92,20 +93,23 @@ class _CreateScreenState extends State<CreateScreen> {
                     'descision_objective': app.decision.objective,
                     'decision_cons': app.decision.getCons.length,
                     'decision_pros': app.decision.getPros.length,
-                    'decision_mood': app.decision.mood.toString(),
+                    'decision_mood': describeEnum(app.decision.mood),
                   });
-                  Firestore.instance.collection('decisions').add(
+                  await Firestore.instance.collection('decisions').add(
                     {
                       'objective': app.decision.objective,
                       'mood': describeEnum(app.decision.mood),
                       'udid': app.udid,
-                      'arguments': app.decision.arguments.map(
-                        (a) => {
-                          'title': a.title,
-                          'importance': a.importance,
-                          'type': describeEnum(a.type),
-                        },
-                      ),
+                      'score': app.decision.buildScore(),
+                      'arguments': app.decision.arguments
+                          .map(
+                            (a) => {
+                              'title': a.title,
+                              'importance': a.importance,
+                              'type': describeEnum(a.type),
+                            },
+                          )
+                          .toList(),
                     },
                   );
                   app.newDecision();
@@ -134,6 +138,7 @@ class _CreateScreenState extends State<CreateScreen> {
                 _ads.showFullScreenAd(
                   state: this,
                   adUnitId: "ca-app-pub-4846566520266716/1402723263",
+                  testing: testing,
                 );
               }
             });

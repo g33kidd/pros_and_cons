@@ -9,6 +9,7 @@ class ArgumentEditor extends StatefulWidget {
   final void Function(OptionType) onTypeChanged;
   final void Function(double) onImportanceUpdate;
   final Function onDeletePressed;
+  final FocusNode focusNode;
 
   ArgumentEditor({
     Key key,
@@ -17,6 +18,7 @@ class ArgumentEditor extends StatefulWidget {
     this.onTextChanged,
     this.onImportanceUpdate,
     this.onTypeChanged,
+    this.focusNode,
   }) : super(key: ObjectKey(option));
 
   @override
@@ -63,6 +65,7 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
                 child: TextField(
                   textCapitalization: TextCapitalization.sentences,
                   controller: _textEditingController,
+                  focusNode: widget.focusNode,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/screens/about.dart';
+import 'package:pros_cons/screens/ad_free.dart';
 import 'package:pros_cons/screens/home.dart';
 import 'package:pros_cons/screens/create.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,9 @@ class App extends StatelessWidget {
       routes: {
         "/Home": (_) => HomeScreen(),
         "/Create": (_) => CreateScreen(),
+        "/RemoveAds": (_) => AdFreeScreen(),
+        // "/Settings": (_) => SettingsScreen(),
+        // "/FeatureSuggest": (_) => SuggestionScreen(),
         "/About": (_) => AboutScreen(),
       },
     );
