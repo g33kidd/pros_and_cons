@@ -49,10 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
       // fontSize: 22.0,
       fontWeight: FontWeight.w800,
     );
-    TextStyle _noHistoryTextStyle = TextStyle(
-      fontSize: 22.0,
-      height: 1.2,
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -72,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
               stream: Firestore.instance
                   .collection('decisions')
                   .where('udid', isEqualTo: app.udid)
+                  .orderBy('created', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError)
@@ -90,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.pushNamed(context, "/Create");
                           },
                         ),
+                        SizedBox(height: 12.0),
                         ...snapshot.data.documents.map(
                           (DocumentSnapshot doc) {
                             final decision = Decision.fromMap(doc.data);
@@ -185,13 +183,27 @@ class HistoryItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text("History detailed info is coming soon!"),
-          behavior: SnackBarBehavior.floating,
+          backgroundColor: purple,
+          content: Text(
+            "History detailed info is coming soon!",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
+        padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 14.0),
+        margin: EdgeInsets.only(
+          bottom: 8.0,
+        ),
         width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.blueGrey[50],
+          borderRadius: BorderRadius.circular(6.0),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,12 +218,10 @@ class HistoryItem extends StatelessWidget {
               ),
             ),
             Text(
-              "${decision.objective}",
+              decision.objective,
               overflow: TextOverflow.fade,
-              maxLines: 1,
-              softWrap: false,
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 18.0,
                 color: Colors.blueGrey[500],
               ),
             ),

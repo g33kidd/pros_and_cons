@@ -53,16 +53,14 @@ class _CreateScreenState extends State<CreateScreen> {
       appBar: AppBar(
         title: Text(
           "PROS & CONS",
-          style: TextStyle(
-            color: purple,
-            fontWeight: FontWeight.w700,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w800),
         ),
+        elevation: 0,
         centerTitle: true,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        // automaticallyImplyLeading: false,
+        backgroundColor: purple,
         iconTheme: IconThemeData(
-          color: Colors.black,
+          color: Colors.white,
         ),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -101,6 +99,7 @@ class _CreateScreenState extends State<CreateScreen> {
                       'mood': describeEnum(app.decision.mood),
                       'udid': app.udid,
                       'score': app.decision.buildScore(),
+                      'created': app.decision.created.toUtc(),
                       'arguments': app.decision.arguments
                           .map(
                             (a) => {
@@ -118,7 +117,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   FocusScope.of(context).requestFocus(new FocusNode());
                   pageController.nextPage(
                     duration: Duration(milliseconds: 600),
-                    curve: Curves.easeInOutQuart,
+                    curve: Curves.easeInOutExpo,
                   );
                 }
               },
@@ -127,7 +126,7 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
       ),
       body: Container(
-        decoration: funkyLinesDecoration,
+        // decoration: funkyLinesDecoration,
         child: PageView(
           physics: NeverScrollableScrollPhysics(),
           controller: pageController,

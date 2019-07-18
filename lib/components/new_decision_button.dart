@@ -11,7 +11,6 @@ class NewDecisionButton extends StatelessWidget {
       onTap: () => onPressed(),
       child: Container(
         padding: EdgeInsets.all(12.0),
-        margin: EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.0),
           color: Colors.pinkAccent,
@@ -21,8 +20,8 @@ class NewDecisionButton extends StatelessWidget {
             "NEW DECISION",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 18.0,
-              fontWeight: FontWeight.w600,
+              fontSize: 20.0,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ),

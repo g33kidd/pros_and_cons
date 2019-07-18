@@ -4,6 +4,8 @@ import 'package:pros_cons/screens/about.dart';
 import 'package:pros_cons/screens/ad_free.dart';
 import 'package:pros_cons/screens/home.dart';
 import 'package:pros_cons/screens/create.dart';
+import 'package:pros_cons/screens/settings.dart';
+import 'package:pros_cons/screens/suggestions.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -33,8 +35,8 @@ class App extends StatelessWidget {
         "/Home": (_) => HomeScreen(),
         "/Create": (_) => CreateScreen(),
         "/RemoveAds": (_) => AdFreeScreen(),
-        // "/Settings": (_) => SettingsScreen(),
-        // "/FeatureSuggest": (_) => SuggestionScreen(),
+        "/Settings": (_) => SettingsScreen(),
+        "/Suggest": (_) => SuggestionScreen(),
         "/About": (_) => AboutScreen(),
       },
     );

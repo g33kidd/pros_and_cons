@@ -51,18 +51,21 @@ class AppDrawer extends StatelessWidget {
                     color: purple,
                   ),
                 ),
-                NewDecisionButton(
-                  onPressed: () {
-                    Navigator.popAndPushNamed(context, "/Create");
-                  },
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
+                  child: NewDecisionButton(
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, "/Create");
+                    },
+                  ),
                 ),
-                ListTile(
-                  title: Text("Decision History", style: _tileTextStyle),
-                  subtitle: Text("View previous decisions"),
-                  leading: Icon(Icons.history),
-                  onTap: () {},
-                ),
-                Divider(),
+                // ListTile(
+                //   title: Text("Decision History", style: _tileTextStyle),
+                //   subtitle: Text("View previous decisions"),
+                //   leading: Icon(Icons.history),
+                //   onTap: () {},
+                // ),
+                // Divider(),
                 ListTile(
                   title: Text("Leave a Review & Rate", style: _tileTextStyle),
                   leading: Icon(Icons.rate_review),
@@ -75,7 +78,7 @@ class AppDrawer extends StatelessWidget {
                   title: Text("Suggest Feature", style: _tileTextStyle),
                   leading: Icon(Icons.chat_bubble_outline),
                   dense: true,
-                  onTap: () {},
+                  onTap: () => Navigator.pushNamed(context, "/Suggest"),
                 ),
                 ListTile(
                   title: Text("Contact Developer", style: _tileTextStyle),
@@ -89,19 +92,16 @@ class AppDrawer extends StatelessWidget {
                     "REMOVE ADS",
                     style: _tileTextStyle.copyWith(color: Colors.red),
                   ),
-                  subtitle: Text("Support developer without ads!"),
+                  dense: true,
+                  subtitle: Text("Support the developer without ads!"),
                   leading: Icon(Icons.block, color: Colors.red),
-                  onTap: () {
-                    Navigator.popAndPushNamed(context, "/RemoveAds");
-                  },
+                  onTap: () => Navigator.popAndPushNamed(context, "/RemoveAds"),
                 ),
-                ListTile(
-                  title: Text("Settings", style: _tileTextStyle),
-                  leading: Icon(Icons.settings),
-                  onTap: () {
-                    Navigator.popAndPushNamed(context, "/Settings");
-                  },
-                )
+                // ListTile(
+                //   title: Text("Settings", style: _tileTextStyle),
+                //   leading: Icon(Icons.settings),
+                //   onTap: () => Navigator.popAndPushNamed(context, "/Settings"),
+                // )
               ],
             ),
           ),
@@ -114,7 +114,7 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  openEmail(BuildContext context) async {
+  void openEmail(BuildContext context) async {
     final email = "g33kidd.studios@gmail.com";
     final subject = "[DEV CONTACT REQUEST] PROS & CONS";
     final body = "Write your request here...";
@@ -151,7 +151,7 @@ class _FooterState extends State<Footer> {
   Widget build(BuildContext context) {
     TextStyle _footerStyle = TextStyle(
       fontSize: 12.0,
-      color: Colors.grey[500],
+      color: Colors.grey[850],
     );
 
     return Row(

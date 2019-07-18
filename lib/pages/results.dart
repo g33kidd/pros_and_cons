@@ -17,7 +17,7 @@ class _ResultsPageState extends State<ResultsPage> {
     final score = decision.buildScore();
     final proScore = score["pro"];
     final conScore = score["con"];
-    final modScore = proScore - conScore;
+    final modScore = score["total"];
 
     TextStyle _headerStyle = TextStyle(
       fontSize: 24.0,

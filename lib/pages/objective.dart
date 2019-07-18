@@ -36,7 +36,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
               SizedBox(height: 32.0),
               TextField(
                 textCapitalization: TextCapitalization.sentences,
-                maxLength: 45,
+                maxLength: 28,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
