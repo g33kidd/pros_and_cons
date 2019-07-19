@@ -17,7 +17,7 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-  final bool testing = true;
+  final bool testing = false;
   int _page = 0;
   Ads _ads;
   PageController pageController = PageController(
@@ -112,7 +112,7 @@ class _CreateScreenState extends State<CreateScreen> {
                     },
                   );
                   app.newDecision();
-                  Navigator.pushReplacementNamed(context, "/Home");
+                  Navigator.popAndPushNamed(context, "/Home");
                 } else {
                   FocusScope.of(context).requestFocus(new FocusNode());
                   pageController.nextPage(

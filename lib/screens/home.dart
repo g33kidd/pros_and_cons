@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Ads _ads;
-  final bool testing = true;
+  final bool testing = false;
 
   @override
   void initState() {
@@ -36,8 +36,15 @@ class _HomeScreenState extends State<HomeScreen> {
     FirebaseAuth.instance.signInAnonymously().then((data) {
       print(data.providerId);
       print("Logged in anonymously!");
-      // _ads.showBannerAd();
+      _ads.showBannerAd();
+      Future.delayed(Duration(seconds: 10), () => _ads.hideBannerAd());
     });
+  }
+
+  @override
+  void dispose() {
+    _ads.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,6 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         backgroundColor: purple,
         title: Text("PROS & CONS", style: _titleStyle),
@@ -78,27 +87,37 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (snapshot.data.documents.length == 0) {
                     return NoHistory();
                   } else {
-                    return ListView(
-                      padding: EdgeInsets.all(12.0),
-                      shrinkWrap: true,
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        NewDecisionButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, "/Create");
-                          },
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 12.0, left: 12.0, right: 12.0),
+                          child: NewDecisionButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/Create");
+                            },
+                          ),
                         ),
-                        SizedBox(height: 12.0),
-                        ...snapshot.data.documents.map(
-                          (DocumentSnapshot doc) {
-                            final decision = Decision.fromMap(doc.data);
-                            return HistoryItem(decision: decision);
-                          },
-                        ).toList()
+                        ListView(
+                          padding: EdgeInsets.all(12.0),
+                          shrinkWrap: true,
+                          children: <Widget>[
+                            ...snapshot.data.documents.map(
+                              (DocumentSnapshot doc) {
+                                final decision = Decision.fromMap(doc.data);
+                                return HistoryItem(decision: decision);
+                              },
+                            ).toList()
+                          ],
+                        ),
                       ],
                     );
                   }
                 } else {
-                  return CircularProgressIndicator();
+                  return NoHistory();
                 }
               },
             ),

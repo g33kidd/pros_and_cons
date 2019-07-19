@@ -16,7 +16,14 @@ class AdFreeScreen extends StatelessWidget {
         title: Text("REMOVE ADS", style: _titleStyle),
         elevation: 0,
       ),
-      body: Container(),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            Text("Coming soon!"),
+          ],
+        ),
+      ),
     );
   }
 }

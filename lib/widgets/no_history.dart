@@ -36,10 +36,13 @@ class NoHistory extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16.0),
-          NewDecisionButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed("/Create");
-            },
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: NewDecisionButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed("/Create");
+              },
+            ),
           ),
         ],
       ),

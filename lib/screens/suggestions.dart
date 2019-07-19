@@ -20,6 +20,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: purple,
         title: Text("SUGGESTIONS", style: _titleStyle),
@@ -28,10 +29,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(14.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
+          child: ListView(
             children: <Widget>[
               Text(
                 "Title",
@@ -86,26 +84,28 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                 ),
               ),
               SizedBox(height: 20.0),
-              RaisedButton.icon(
-                icon: Icon(Icons.send),
-                label: Text("Send Suggestion"),
-                color: purple,
-                textColor: Colors.white,
-                onPressed: () async {
-                  await Firestore.instance.collection('suggestions').add(
-                    {
-                      'title': title,
-                      'suggestion': body,
-                    },
-                  );
-                  // Scaffold.of(context).showSnackBar(
-                  //   SnackBar(
-                  //     content: Text("Thanks for the suggestion!"),
-                  //   ),
-                  // );
-                  Navigator.pop(context, true);
-                },
-              ),
+              Builder(builder: (context) {
+                return RaisedButton.icon(
+                  icon: Icon(Icons.send),
+                  label: Text("Send Suggestion"),
+                  color: purple,
+                  textColor: Colors.white,
+                  onPressed: () async {
+                    await Firestore.instance.collection('suggestions').add(
+                      {
+                        'title': title,
+                        'suggestion': body,
+                      },
+                    );
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Thanks for the suggestion!"),
+                      ),
+                    );
+                    Navigator.pop(context, true);
+                  },
+                );
+              }),
             ],
           ),
         ),
