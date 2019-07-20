@@ -83,9 +83,6 @@ class Decision {
         importance: f['importance'],
       ));
     });
-    print(getMoodFromString("HAPPY"));
-    print(getMoodFromString("MEH"));
-    print(getMoodFromString("SAD"));
     return decision;
   }
 }
