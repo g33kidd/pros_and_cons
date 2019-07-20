@@ -4,7 +4,9 @@ enum OptionType { PRO, CON }
 enum Mood { HAPPY, MEH, SAD }
 
 Mood getMoodFromString(String value) {
-  return Mood.values.firstWhere((f) => describeEnum(f) == value.toLowerCase());
+  return Mood.values.firstWhere(
+    (f) => describeEnum(f).toLowerCase() == value.toLowerCase(),
+  );
 }
 
 OptionType getOptionTypeFromString(String value) {
@@ -70,7 +72,7 @@ class Decision {
   static Decision fromMap(Map<String, dynamic> doc) {
     Decision decision = Decision();
     decision.objective = doc['objective'];
-    // decision.mood = getMoodFromString(doc['mood']);
+    decision.mood = getMoodFromString(doc['mood']);
     decision.conScore = doc['score']['con'];
     decision.proScore = doc['score']['pro'];
     decision.totalScore = doc['score']['total'];
@@ -81,6 +83,9 @@ class Decision {
         importance: f['importance'],
       ));
     });
+    print(getMoodFromString("HAPPY"));
+    print(getMoodFromString("MEH"));
+    print(getMoodFromString("SAD"));
     return decision;
   }
 }

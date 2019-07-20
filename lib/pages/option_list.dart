@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/argument_editor.dart';
+import 'package:pros_cons/widgets/no_history.dart';
+import 'package:pros_cons/widgets/no_items_added.dart';
 import 'package:provider/provider.dart';
 
 class OptionListPage extends StatefulWidget {
@@ -18,6 +20,7 @@ class OptionListPage extends StatefulWidget {
 
 class _OptionListPageState extends State<OptionListPage> {
   final List<FocusNode> focusNodes = <FocusNode>[];
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -29,73 +32,83 @@ class _OptionListPageState extends State<OptionListPage> {
     super.dispose();
   }
 
+  void addOption(app) {
+    app.addOption();
+    final newNode = FocusNode();
+    focusNodes.add(newNode);
+    Future.delayed(
+      Duration(milliseconds: 200),
+      () {
+        newNode.requestFocus();
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(
+            milliseconds: 200,
+          ),
+          curve: Curves.easeInOutQuart,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Consumer<AppModel>(
-              builder: (context, app, child) {
-                final options = app.options;
-                return ListView(
-                  shrinkWrap: true,
-                  // reverse: true,
-                  children: <Widget>[
-                    SizedBox(height: 24),
-                    ...options.map((f) {
-                      final index = options.indexOf(f);
+    return Consumer<AppModel>(builder: (context, app, child) {
+      final options = app.options;
 
-                      return ArgumentEditor(
-                        option: f,
-                        focusNode: focusNodes[index],
-                        onImportanceUpdate: (double value) {
-                          f.importance = value;
-                          app.updateOption(index, f);
-                        },
-                        onDeletePressed: () {
-                          app.deleteOptionAt(index);
-                        },
-                        onTextChanged: (String value) {
-                          f.title = value;
-                          app.updateOption(index, f);
-                        },
-                        onTypeChanged: (OptionType type) {
-                          f.type = type;
-                          app.updateOption(index, f);
-                        },
-                      );
-                    }).toList(),
-                    // TODO make this better
-                    SizedBox(height: 12.0),
+      if (options.length == 0)
+        return NoItemsAdded(onPressed: () => addOption(app));
 
-                    FlatButton.icon(
-                      icon: Icon(
-                        Icons.add_box,
-                        size: 32.0,
-                      ),
-                      label: Text("Add Argument",
-                          style: TextStyle(fontSize: 22.0)),
-                      onPressed: () {
-                        final newNode = FocusNode();
-                        focusNodes.add(newNode);
-                        app.addOption();
-                        Future.delayed(
-                          Duration(milliseconds: 200),
-                          () => newNode.requestFocus(),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 25.0),
-                  ],
-                );
-              },
+      return Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                shrinkWrap: true,
+                // reverse: true,
+                itemCount: options.length,
+                itemBuilder: (context, index) {
+                  final f = options[index];
+                  return ArgumentEditor(
+                    option: f,
+                    firstItem: index == 0,
+                    lastItem: index == options.length - 1,
+                    focusNode: focusNodes[index],
+                    onImportanceUpdate: (double value) {
+                      f.importance = value;
+                      app.updateOption(index, f);
+                    },
+                    onDeletePressed: () {
+                      app.deleteOptionAt(index);
+                    },
+                    onTextChanged: (String value) {
+                      f.title = value;
+                      app.updateOption(index, f);
+                    },
+                    onTypeChanged: (OptionType type) {
+                      f.type = type;
+                      app.updateOption(index, f);
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+            Center(
+              child: FlatButton.icon(
+                icon: Icon(
+                  Icons.add_box,
+                  size: 28.0,
+                ),
+                label: Text("ADD ARGUMENT", style: TextStyle(fontSize: 20.0)),
+                onPressed: () => addOption(app),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

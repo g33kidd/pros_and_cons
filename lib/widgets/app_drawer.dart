@@ -98,17 +98,17 @@ class AppDrawer extends StatelessWidget {
                   dense: true,
                   onTap: () => openEmail(context),
                 ),
-                // Divider(),
-                // ListTile(
-                //   title: Text(
-                //     "REMOVE ADS",
-                //     style: _tileTextStyle.copyWith(color: Colors.red),
-                //   ),
-                //   dense: true,
-                //   subtitle: Text("Support the developer without ads!"),
-                //   leading: Icon(Icons.block, color: Colors.red),
-                //   onTap: () => Navigator.popAndPushNamed(context, "/RemoveAds"),
-                // ),
+                Divider(),
+                ListTile(
+                  title: Text(
+                    "REMOVE ADS",
+                    style: _tileTextStyle.copyWith(color: Colors.red),
+                  ),
+                  dense: true,
+                  subtitle: Text("Support the developer without ads!"),
+                  leading: Icon(Icons.block, color: Colors.red),
+                  onTap: () => Navigator.popAndPushNamed(context, "/RemoveAds"),
+                ),
                 // ListTile(
                 //   title: Text("Settings", style: _tileTextStyle),
                 //   leading: Icon(Icons.settings),

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/switcher.dart';
+import 'package:pros_cons/util.dart';
 
 class ArgumentEditor extends StatefulWidget {
+  final bool firstItem;
+  final bool lastItem;
   final Option option;
   final void Function(String) onTextChanged;
   final void Function(OptionType) onTypeChanged;
@@ -13,6 +16,8 @@ class ArgumentEditor extends StatefulWidget {
 
   ArgumentEditor({
     Key key,
+    this.firstItem,
+    this.lastItem,
     this.option,
     this.onDeletePressed,
     this.onTextChanged,
@@ -46,8 +51,15 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
 
   @override
   Widget build(BuildContext context) {
+    EdgeInsetsGeometry padding = EdgeInsets.only(
+      left: 16.0,
+      right: 16.0,
+      top: widget.firstItem ? 16.0 : 0.0,
+      bottom: widget.lastItem ? 16.0 : 0.0,
+    );
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: padding,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,13 +79,8 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
                   controller: _textEditingController,
                   focusNode: widget.focusNode,
                   decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: EdgeInsets.all(13.0),
-                    hintText: "Edit here...",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(3.0),
-                    ),
+                    contentPadding: EdgeInsets.all(12.5),
+                    hintText: "Edit me...",
                   ),
                   onChanged: onTextChanged,
                 ),
@@ -85,6 +92,7 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
               ),
             ],
           ),
+          SizedBox(height: 12.0),
           Slider(
             value: option.importance,
             divisions: 10,
@@ -93,6 +101,7 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
             max: 10,
             label: "${option.importance.toInt()} Importance",
           ),
+          SizedBox(height: 12.0),
         ],
       ),
     );

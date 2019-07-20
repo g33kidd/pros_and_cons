@@ -8,6 +8,7 @@ import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/app_drawer.dart';
+import 'package:pros_cons/widgets/mood_icon.dart';
 import 'package:pros_cons/widgets/no_history.dart';
 import 'package:pros_cons/widgets/totd.dart';
 import 'package:provider/provider.dart';
@@ -94,7 +95,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(
-                              top: 12.0, left: 12.0, right: 12.0),
+                            top: 12.0,
+                            left: 12.0,
+                            right: 12.0,
+                          ),
                           child: NewDecisionButton(
                             onPressed: () {
                               Navigator.pushNamed(context, "/Create");
@@ -248,6 +252,7 @@ class HistoryItem extends StatelessWidget {
                 color: Colors.blueGrey[500],
               ),
             ),
+            MoodIcon(mood: decision.mood),
           ],
         ),
       ),

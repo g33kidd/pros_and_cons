@@ -35,6 +35,11 @@ class _CreateScreenState extends State<CreateScreen> {
       adUnitId: "ca-app-pub-4846566520266716/1402723263",
       testing: testing,
     );
+
+    Future.delayed(
+      Duration(milliseconds: 300),
+      () => Provider.of<AppModel>(context).decision.arguments.clear(),
+    );
   }
 
   bool get isNext => (_page < 2);
@@ -64,8 +69,8 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        elevation: 8.0,
+        color: Colors.purple.withAlpha(87),
+        elevation: 0.0,
         child: Container(
           height: 55.0,
           padding: EdgeInsets.all(8.0),
@@ -112,7 +117,8 @@ class _CreateScreenState extends State<CreateScreen> {
                     },
                   );
                   app.newDecision();
-                  Navigator.popAndPushNamed(context, "/Home");
+                  Navigator.pop(context);
+                  // Navigator.popAndPushNamed(context, "/Home");
                 } else {
                   FocusScope.of(context).requestFocus(new FocusNode());
                   pageController.nextPage(

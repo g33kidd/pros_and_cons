@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
+import 'package:pros_cons/widgets/switcher.dart';
 import 'package:provider/provider.dart';
 
 class ObjectivePage extends StatefulWidget {
@@ -33,25 +34,25 @@ class _ObjectivePageState extends State<ObjectivePage> {
             children: <Widget>[
               Text("Let's start with an objective.", style: _headerText),
               Text("What are you making a decision on?", style: _subHeaderText),
-              SizedBox(height: 32.0),
+              SizedBox(height: 24.0),
               TextField(
                 textCapitalization: TextCapitalization.sentences,
                 maxLength: 28,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.all(16.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                ),
+                // decoration: InputDecoration(
+                //   filled: true,
+                //   fillColor: Colors.white,
+                //   contentPadding: EdgeInsets.all(16.0),
+                //   border: OutlineInputBorder(
+                //     borderRadius: BorderRadius.circular(5.0),
+                //   ),
+                // ),
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
                 onChanged: (s) => app.updateObjective(s),
                 autofocus: true,
               ),
-              SizedBox(height: 32.0),
+              SizedBox(height: 24.0),
               Text("How are you feeling about it?", style: _headerText),
               Text("This will come in handy later.", style: _subHeaderText),
               Padding(
@@ -93,7 +94,7 @@ class _MoodSelectionState extends State<MoodSelection> {
             iconSize: 80.0,
             padding: EdgeInsets.zero,
             icon: Icon(
-              Icons.sentiment_satisfied,
+              Icons.sentiment_very_satisfied,
               color: (selectedMood == Mood.HAPPY ? Colors.green : Colors.grey),
             ),
             onPressed: () => switchSentiment(Mood.HAPPY),
@@ -111,7 +112,7 @@ class _MoodSelectionState extends State<MoodSelection> {
             iconSize: 80.0,
             padding: EdgeInsets.zero,
             icon: Icon(
-              Icons.sentiment_dissatisfied,
+              Icons.sentiment_very_dissatisfied,
               color: (selectedMood == Mood.SAD ? Colors.red : Colors.grey),
             ),
             onPressed: () => switchSentiment(Mood.SAD),
