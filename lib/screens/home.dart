@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
     FirebaseAuth.instance.signInAnonymously().then((data) {
       print(data.providerId);
       print("Logged in anonymously!");
-      _ads.showBannerAd();
+      _ads.showBannerAd(testing: testing);
       Future.delayed(Duration(seconds: 10), () => _ads.hideBannerAd());
     });
   }
@@ -108,7 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             ...snapshot.data.documents.map(
                               (DocumentSnapshot doc) {
                                 final decision = Decision.fromMap(doc.data);
-                                return HistoryItem(decision: decision);
+                                // TODO switch this to the User ID. these won't be saved across devices... or maybe even updates!
+                                if (doc['udid'] == app.udid)
+                                  return HistoryItem(decision: decision);
+                                return Container(height: 0, width: 0);
                               },
                             ).toList()
                           ],
@@ -199,6 +202,7 @@ class HistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final description = describeScore(decision.totalScore);
     return GestureDetector(
       onTap: () {
         Scaffold.of(context).showSnackBar(SnackBar(
@@ -229,7 +233,7 @@ class HistoryItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              decision.totalScore.toStringAsFixed(0),
+              "$description (${decision.totalScore.toStringAsFixed(0)})",
               style: TextStyle(
                 fontSize: 22.0,
                 color: (decision.totalScore > 0) ? Colors.green : Colors.red,

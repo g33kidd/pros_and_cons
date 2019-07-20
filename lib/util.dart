@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 
 final Color purple = Color(0xFF7665E6);
 
+String describeScore(score) {
+  if (score > 0) {
+    return "YES";
+  } else {
+    return "NO";
+  }
+}
+
 final funkyLinesDecoration = BoxDecoration(
   image: DecorationImage(
     image: AssetImage("assets/funky-lines.png"),

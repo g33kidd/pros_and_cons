@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../util.dart';
@@ -66,6 +67,17 @@ class AppDrawer extends StatelessWidget {
                 //   onTap: () {},
                 // ),
                 // Divider(),
+                ListTile(
+                  title: Text("Share with Friends", style: _tileTextStyle),
+                  leading: Icon(Icons.share),
+                  dense: true,
+                  onTap: () async {
+                    await Share.share(
+                      "I just weighed my pros and cons for a decision on this app. Checkout PROS & CONS on the Play Store! http://bit.ly/32sRgb9",
+                      subject: "PROS & CONS",
+                    );
+                  },
+                ),
                 ListTile(
                   title: Text("Leave a Review & Rate", style: _tileTextStyle),
                   leading: Icon(Icons.rate_review),
