@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
 
@@ -40,6 +41,12 @@ class NoHistory extends StatelessWidget {
             padding: EdgeInsets.all(16.0),
             child: NewDecisionButton(
               onPressed: () {
+                FirebaseAnalytics().logEvent(
+                  name: "new_decision",
+                  parameters: {
+                    'position': "no_history",
+                  },
+                );
                 Navigator.of(context).pushNamed("/Create");
               },
             ),

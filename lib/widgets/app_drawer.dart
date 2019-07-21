@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
@@ -56,6 +57,13 @@ class AppDrawer extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 14.0, vertical: 8.0),
                   child: NewDecisionButton(
                     onPressed: () {
+                      FirebaseAnalytics().logEvent(
+                        name: "new_decision",
+                        parameters: {
+                          'position': "app_drawer",
+                        },
+                      );
+
                       Navigator.popAndPushNamed(context, "/Create");
                     },
                   ),
@@ -72,6 +80,7 @@ class AppDrawer extends StatelessWidget {
                   leading: Icon(Icons.share),
                   dense: true,
                   onTap: () async {
+                    FirebaseAnalytics().logEvent(name: "social_share");
                     await Share.share(
                       "I just weighed my pros and cons for a decision on this app. Checkout PROS & CONS on the Play Store! http://bit.ly/32sRgb9",
                       subject: "PROS & CONS",

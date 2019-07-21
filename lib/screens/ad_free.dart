@@ -21,7 +21,7 @@ class _AdFreeScreenState extends State<AdFreeScreen> {
       productDetails: _removeAdsProduct,
     );
 
-    await InAppPurchaseConnection.instance.buyNonConsumable(
+    await InAppPurchaseConnection.instance.buyConsumable(
       purchaseParam: purchaseParam,
     );
   }

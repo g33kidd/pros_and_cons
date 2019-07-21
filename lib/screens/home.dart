@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
@@ -58,7 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
       fontWeight: FontWeight.w800,
     );
 
+    final _snackKey = GlobalKey<ScaffoldState>();
+
     return Scaffold(
+      key: _snackKey,
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
@@ -101,6 +105,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: NewDecisionButton(
                             onPressed: () {
+                              FirebaseAnalytics().logEvent(
+                                name: "new_decision",
+                                parameters: {
+                                  'position': "history_list",
+                                },
+                              );
+
                               Navigator.pushNamed(context, "/Create");
                             },
                           ),
@@ -112,9 +123,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             ...snapshot.data.documents.map(
                               (DocumentSnapshot doc) {
                                 final decision = Decision.fromMap(doc.data);
-                                // TODO switch this to the User ID. these won't be saved across devices... or maybe even updates!
                                 if (doc['udid'] == app.udid)
-                                  return HistoryItem(decision: decision);
+                                  return HistoryItem(
+                                    decision: decision,
+                                    onDelete: () async {
+                                      await doc.reference.delete();
+                                      Navigator.pop(context, true);
+                                      _snackKey.currentState.showSnackBar(
+                                        SnackBar(
+                                          backgroundColor: purple,
+                                          duration: Duration(
+                                            milliseconds: 800,
+                                          ),
+                                          content: Text(
+                                            "Successfully deleted the decision!",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
                                 return Container(height: 0, width: 0);
                               },
                             ).toList()
@@ -135,91 +167,73 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// class HomeScreen extends StatefulWidget {
-//   @override
-//   _HomeScreenState createState() => _HomeScreenState();
-// }
-
-// class _HomeScreenState extends State<HomeScreen> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     FirebaseAuth.instance.signInAnonymously().then((data) {
-//       print(data.providerId);
-//       print("Logged in anonymously!");
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final app = Provider.of<AppModel>(context);
-
-//     return Scaffold(
-//       resizeToAvoidBottomPadding: false,
-//       body: SafeArea(
-//         child: Container(
-//           decoration: BoxDecoration(
-//             image: DecorationImage(
-//               image: AssetImage("assets/funky-lines.png"),
-//               repeat: ImageRepeat.repeat,
-//               fit: BoxFit.cover,
-//               colorFilter: ColorFilter.mode(
-//                 Colors.white.withOpacity(0.4),
-//                 BlendMode.dstATop,
-//               ),
-//             ),
-//           ),
-//           child: Padding(
-//             padding: EdgeInsets.all(24.0),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//               children: <Widget>[
-//                 Header(),
-//                 Expanded(
-//                   child: Container(
-//                     width: double.infinity,
-//                     child: Padding(
-//                       padding: EdgeInsets.symmetric(
-//                         vertical: 22.0,
-//                       ),
-//                       child: app.udid != ''
-//                           ? History()
-//                           : CircularProgressIndicator(),
-//                     ),
-//                   ),
-//                 ),
-//                 Footer(),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class HistoryItem extends StatelessWidget {
   final Decision decision;
+  final Function onDelete;
 
-  HistoryItem({Key key, this.decision}) : super(key: key);
+  HistoryItem({
+    Key key,
+    this.decision,
+    this.onDelete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final description = describeScore(decision.totalScore);
     return GestureDetector(
       onTap: () {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          backgroundColor: purple,
-          content: Text(
-            "History detailed info is coming soon!",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18.0,
-              fontWeight: FontWeight.w600,
+        HapticFeedback.lightImpact();
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: purple,
+            content: Text(
+              "History detailed info is coming soon!",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-        ));
+        );
+      },
+      onLongPress: () async {
+        HapticFeedback.mediumImpact();
+        await showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Sure you want to delete?"),
+              elevation: 1.0,
+              actions: <Widget>[
+                FlatButton.icon(
+                  icon: Icon(Icons.check),
+                  label: Text(
+                    "YES!",
+                    style: TextStyle(
+                      color: purple,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () async => await onDelete(),
+                ),
+                FlatButton(
+                  child: Text(
+                    "NO",
+                    style: TextStyle(
+                      color: red,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(true),
+                ),
+              ],
+            );
+          },
+        );
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 14.0, horizontal: 14.0),

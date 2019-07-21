@@ -14,6 +14,16 @@ class NewDecisionButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.0),
           color: Colors.pinkAccent,
+          // Not sure if I want a shadow on the button,
+          // there isn't many shadows in this design.
+          //
+          // boxShadow: [
+          // BoxShadow(
+          // color: Colors.black.withAlpha(32),
+          // offset: Offset(0, 2),
+          // blurRadius: 3.0,
+          // ),
+          // ],
         ),
         child: Center(
           child: Text(
