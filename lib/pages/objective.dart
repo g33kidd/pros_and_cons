@@ -50,7 +50,6 @@ class _ObjectivePageState extends State<ObjectivePage> {
                   fontSize: 18.0,
                 ),
                 onChanged: (s) => app.updateObjective(s),
-                autofocus: true,
               ),
               SizedBox(height: 24.0),
               Text("How are you feeling about it?", style: _headerText),

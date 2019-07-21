@@ -63,7 +63,6 @@ class AppDrawer extends StatelessWidget {
                           'position': "app_drawer",
                         },
                       );
-
                       Navigator.popAndPushNamed(context, "/Create");
                     },
                   ),

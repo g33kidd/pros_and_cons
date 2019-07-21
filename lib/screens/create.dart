@@ -17,7 +17,8 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-  final bool testing = false;
+  final bool testing = true;
+  bool loading = false;
   int _page = 0;
   Ads _ads;
   PageController pageController = PageController(
@@ -30,9 +31,8 @@ class _CreateScreenState extends State<CreateScreen> {
   void initState() {
     super.initState();
 
-    _ads = Ads("ca-app-pub-4846566520266716~9709175425", testing: testing);
-    _ads.setFullScreenAd(
-      adUnitId: "ca-app-pub-4846566520266716/1402723263",
+    _ads = Ads(
+      "ca-app-pub-4846566520266716~9709175425",
       testing: testing,
     );
 
@@ -46,6 +46,9 @@ class _CreateScreenState extends State<CreateScreen> {
 
   @override
   void dispose() {
+    _ads.hideFullScreenAd();
+    _ads.hideBannerAd();
+    _ads.dispose();
     super.dispose();
   }
 
@@ -92,6 +95,15 @@ class _CreateScreenState extends State<CreateScreen> {
               ),
               onPressed: () async {
                 if (_page == 2) {
+                  _ads.showFullScreenAd(
+                    state: this,
+                    adUnitId: "ca-app-pub-4846566520266716/9132707300",
+                    testing: testing,
+                  );
+                  setState(() {
+                    loading = true;
+                  });
+                  await Future.delayed(Duration(seconds: 5));
                   FirebaseAnalytics().logEvent(name: "finish", parameters: {
                     'descision_objective': app.decision.objective,
                     'decision_cons': app.decision.getCons.length,
@@ -118,6 +130,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   );
                   app.newDecision();
                   Navigator.pop(context);
+
                   // Navigator.popAndPushNamed(context, "/Home");
                 } else {
                   FocusScope.of(context).requestFocus(new FocusNode());
@@ -133,27 +146,22 @@ class _CreateScreenState extends State<CreateScreen> {
       ),
       body: Container(
         // decoration: funkyLinesDecoration,
-        child: PageView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: pageController,
-          onPageChanged: (page) {
-            setState(() {
-              _page = page;
-              if (page == 2) {
-                _ads.showFullScreenAd(
-                  state: this,
-                  adUnitId: "ca-app-pub-4846566520266716/1402723263",
-                  testing: testing,
-                );
-              }
-            });
-          },
-          children: <Widget>[
-            ObjectivePage(),
-            OptionListPage(),
-            ResultsPage(),
-          ],
-        ),
+        child: loading
+            ? Center(child: CircularProgressIndicator())
+            : PageView(
+                physics: NeverScrollableScrollPhysics(),
+                controller: pageController,
+                onPageChanged: (page) {
+                  setState(() {
+                    _page = page;
+                  });
+                },
+                children: <Widget>[
+                  ObjectivePage(),
+                  OptionListPage(),
+                  ResultsPage(),
+                ],
+              ),
       ),
     );
   }
