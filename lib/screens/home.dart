@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // Ads _ads;
-  final bool testing = true;
+  final bool testing = false;
 
   @override
   void initState() {

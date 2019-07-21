@@ -17,7 +17,7 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-  final bool testing = true;
+  final bool testing = false;
   bool loading = false;
   int _page = 0;
   Ads _ads;
