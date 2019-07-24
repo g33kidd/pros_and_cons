@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pros_cons/display.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/pages/objective.dart';
@@ -59,42 +60,31 @@ class _CreateScreenState extends State<CreateScreen> {
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text(
-          "PROS & CONS",
-          style: TextStyle(fontWeight: FontWeight.w800),
-        ),
-        elevation: 0,
+        title: Text("PROS & CONS", style: Display.titleStyle),
         centerTitle: true,
-        // automaticallyImplyLeading: false,
-        backgroundColor: purple,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.purple.withAlpha(87),
-        elevation: 0.0,
-        child: Container(
-          height: 55.0,
-          padding: EdgeInsets.all(8.0),
-          color: Colors.white,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FlatButton.icon(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            FlatButton.icon(
               icon: Icon(
                 isNext ? Icons.arrow_forward : Icons.save,
-                color: purple,
-                size: 24.0,
+                color: Colors.white,
+                size: 20.0,
               ),
               label: Text(
                 isNext ? "NEXT" : "SAVE & FINISH",
                 style: TextStyle(
-                  color: purple,
-                  fontSize: 22.0,
+                  color: Colors.white,
+                  fontSize: 18.0,
                 ),
               ),
               onPressed: () async {
                 if (_page == 2) {
+                  // TODO idk what to do about this...
+                  // Ads don't show up half the time, but when they do it's cancelled because
+                  // this is going out of View!
                   _ads.showFullScreenAd(
                     state: this,
                     adUnitId: "ca-app-pub-4846566520266716/9132707300",
@@ -141,7 +131,7 @@ class _CreateScreenState extends State<CreateScreen> {
                 }
               },
             ),
-          ),
+          ],
         ),
       ),
       body: Container(
@@ -154,6 +144,14 @@ class _CreateScreenState extends State<CreateScreen> {
                 onPageChanged: (page) {
                   setState(() {
                     _page = page;
+
+                    // TODO this sometimes works, figure out where else to put it and load ads From?
+                    // Admob fucking sucks on Flutter...
+                    if (_page == 2) {
+                      Future.delayed(Duration(milliseconds: 1200), () {
+                        _ads.showFullScreenAd();
+                      });
+                    }
                   });
                 },
                 children: <Widget>[

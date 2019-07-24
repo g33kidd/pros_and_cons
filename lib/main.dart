@@ -33,6 +33,14 @@ class App extends StatelessWidget {
       navigatorObservers: <NavigatorObserver>[observer],
       home: HomeScreen(),
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          color: purple,
+          elevation: 0,
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+        ),
+        bottomAppBarTheme: BottomAppBarTheme(color: purple),
         sliderTheme: SliderThemeData(
           activeTrackColor: purple,
           inactiveTrackColor: Colors.black12,

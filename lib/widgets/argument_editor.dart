@@ -58,6 +58,12 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
       bottom: widget.lastItem ? 16.0 : 0.0,
     );
 
+    final sliderLabelStyle = TextStyle(
+      fontSize: 12.0,
+      color: Colors.blueGrey[400],
+      fontWeight: FontWeight.w600,
+    );
+
     return Padding(
       padding: padding,
       child: Column(
@@ -101,7 +107,22 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
             max: 10,
             label: "${option.importance.toInt()} Importance",
           ),
-          SizedBox(height: 12.0),
+          SizedBox(height: 6.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              if (option.type == OptionType.PRO) ...[
+                Text("Not Important", style: sliderLabelStyle),
+                Text("Very Important", style: sliderLabelStyle),
+              ],
+              if (option.type == OptionType.CON) ...[
+                Text("Not Bad", style: sliderLabelStyle),
+                Text("Very Bad", style: sliderLabelStyle),
+              ],
+            ],
+          ),
+          SizedBox(height: 22.0),
         ],
       ),
     );

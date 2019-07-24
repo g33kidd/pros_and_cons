@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:pros_cons/display.dart';
 import 'package:pros_cons/util.dart';
 
 const Set<String> _productIds = {'remove_ads_1'};
@@ -66,17 +67,9 @@ class _AdFreeScreenState extends State<AdFreeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _titleStyle = TextStyle(
-      color: Colors.white,
-      // fontSize: 22.0,
-      fontWeight: FontWeight.w800,
-    );
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: purple,
-        title: Text("REMOVE ADS", style: _titleStyle),
-        elevation: 0,
+        title: Text("REMOVE ADS", style: Display.titleStyle),
       ),
       body: Container(
         width: double.infinity,

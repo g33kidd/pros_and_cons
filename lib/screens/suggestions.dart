@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
+import 'package:pros_cons/display.dart';
 import 'package:pros_cons/util.dart';
 
 class SuggestionScreen extends StatefulWidget {
@@ -14,17 +15,10 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _titleStyle = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.w800,
-    );
-
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        backgroundColor: purple,
-        title: Text("SUGGESTIONS", style: _titleStyle),
-        elevation: 0,
+        title: Text("SUGGESTIONS", style: Display.titleStyle),
       ),
       body: SafeArea(
         child: Container(
@@ -45,15 +39,6 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                     title = s;
                   });
                 },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.all(13.0),
-                  hintText: "Edit here...",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(3.0),
-                  ),
-                ),
               ),
               SizedBox(height: 20.0),
               Text(
@@ -72,16 +57,6 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                     body = s;
                   });
                 },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.all(13.0),
-                  hintText: "Edit me...",
-                  focusColor: purple,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(3.0),
-                  ),
-                ),
               ),
               SizedBox(height: 20.0),
               Builder(builder: (context) {

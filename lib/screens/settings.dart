@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pros_cons/display.dart';
 
 import '../util.dart';
 
@@ -8,16 +9,9 @@ import '../util.dart';
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final _titleStyle = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.w800,
-    );
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: purple,
-        title: Text("PROS & CONS", style: _titleStyle),
-        elevation: 0,
+        title: Text("PROS & CONS", style: Display.titleStyle),
       ),
       body: Container(),
     );

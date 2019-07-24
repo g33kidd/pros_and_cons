@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
+import 'package:pros_cons/display.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/app_drawer.dart';
@@ -22,43 +23,37 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Ads _ads;
+  Ads _ads;
   final bool testing = false;
 
   @override
   void initState() {
     super.initState();
 
-    // _ads = Ads(
-    //   "ca-app-pub-4846566520266716~9709175425",
-    //   testing: testing,
-    //   bannerUnitId: "ca-app-pub-4846566520266716/6725176015",
-    // );
+    _ads = Ads(
+      "ca-app-pub-4846566520266716~9709175425",
+      testing: testing,
+      bannerUnitId: "ca-app-pub-4846566520266716/6725176015",
+    );
 
+    // Move to CheckAuth screen, in prep for user accounts?
     FirebaseAuth.instance.signInAnonymously().then((data) {
       print(data.providerId);
       print("Logged in anonymously!");
-      // _ads.showBannerAd(testing: testing);
-      // Future.delayed(Duration(seconds: 5), () => _ads.hideBannerAd());
+      _ads.showBannerAd(testing: testing);
+      Future.delayed(Duration(seconds: 5), () => _ads.hideBannerAd());
     });
   }
 
   @override
   void dispose() {
-    // _ads.dispose();
+    _ads.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final app = Provider.of<AppModel>(context);
-
-    final _titleStyle = TextStyle(
-      color: Colors.white,
-      // fontSize: 22.0,
-      fontWeight: FontWeight.w800,
-    );
-
     final _snackKey = GlobalKey<ScaffoldState>();
 
     return Scaffold(
@@ -66,9 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
       appBar: AppBar(
-        backgroundColor: purple,
-        title: Text("PROS & CONS", style: _titleStyle),
-        elevation: 0,
+        title: Text("PROS & CONS", style: Display.titleStyle),
       ),
       drawer: AppDrawer(),
       body: Column(
