@@ -95,7 +95,6 @@ class _CreateScreenState extends State<CreateScreen> {
                   });
                   await Future.delayed(Duration(seconds: 5));
                   FirebaseAnalytics().logEvent(name: "finish", parameters: {
-                    'descision_objective': app.decision.objective,
                     'decision_cons': app.decision.getCons.length,
                     'decision_pros': app.decision.getPros.length,
                     'decision_mood': describeEnum(app.decision.mood),
