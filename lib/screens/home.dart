@@ -40,8 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
     FirebaseAuth.instance.signInAnonymously().then((data) {
       print(data.providerId);
       print("Logged in anonymously!");
-      _ads.showBannerAd(testing: testing);
-      Future.delayed(Duration(seconds: 5), () => _ads.hideBannerAd());
+      _ads.showBannerAd(
+        testing: testing,
+        anchorOffset: 50.0,
+      );
+      Future.delayed(Duration(seconds: 10), () => _ads.hideBannerAd());
     });
   }
 
