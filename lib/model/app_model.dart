@@ -7,6 +7,7 @@ import 'package:flutter_udid/flutter_udid.dart';
 
 class AppModel extends ChangeNotifier {
   String udid;
+  String uid;
 
   List<Decision> history = [
     Decision(),
@@ -33,34 +34,6 @@ class AppModel extends ChangeNotifier {
 
     // Creates a new default decision
     decision = Decision();
-    // decision.objective = "Test";
-    // decision.arguments = [
-    //   Option(
-    //       importance: 1,
-    //       title: "1 Just testing some things.",
-    //       type: OptionType.CON),
-    //   Option(
-    //       importance: 2,
-    //       title: "2 Just testing some things.",
-    //       type: OptionType.PRO),
-    //   Option(
-    //       importance: 4,
-    //       title: "3 Just testing some things.",
-    //       type: OptionType.CON),
-    //   Option(
-    //       importance: 1,
-    //       title: "4 Just testing some things.",
-    //       type: OptionType.PRO),
-    //   Option(
-    //       importance: 2,
-    //       title: "5 Just testing some things.",
-    //       type: OptionType.PRO),
-    //   Option(
-    //       importance: 3,
-    //       title: "6 Just testing some things.",
-    //       type: OptionType.CON),
-    // ];
-    // TODO: load history from storage here...
   }
 
   /// Removes an option from the current decision being edited.

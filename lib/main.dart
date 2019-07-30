@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pros_cons/display.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/screens/about.dart';
 import 'package:pros_cons/screens/ad_free.dart';
@@ -20,6 +22,42 @@ void main() {
   );
 }
 
+class CheckLogin extends StatefulWidget {
+  @override
+  _CheckLoginState createState() => _CheckLoginState();
+}
+
+class _CheckLoginState extends State<CheckLogin> {
+  @override
+  void initState() {
+    super.initState();
+    checkAnonymousLogin();
+  }
+
+  Future checkAnonymousLogin() async {
+    final user = await FirebaseAuth.instance.signInAnonymously();
+    await Future.delayed(Duration(milliseconds: 300));
+    Provider.of<AppModel>(context).uid = user.uid;
+    if (user != null) return await Navigator.pushNamed(context, "/Home");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Container(
+          height: 100,
+          width: 100,
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.blueGrey[100],
+            strokeWidth: 8.0,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class App extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
@@ -31,13 +69,21 @@ class App extends StatelessWidget {
       title: "Pros & Cons",
       debugShowCheckedModeBanner: false,
       navigatorObservers: <NavigatorObserver>[observer],
-      home: HomeScreen(),
+      home: CheckLogin(),
       theme: ThemeData(
+        accentColor: purple,
         appBarTheme: AppBarTheme(
           color: purple,
           elevation: 0,
           iconTheme: IconThemeData(
             color: Colors.white,
+          ),
+          textTheme: TextTheme(
+            title: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 20.0,
+            ),
           ),
         ),
         bottomAppBarTheme: BottomAppBarTheme(color: purple),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 enum OptionType { PRO, CON }
@@ -68,6 +69,9 @@ class Decision {
       'arguments': arguments.map((a) => a.toMap())
     };
   }
+
+  static Decision fromSnapshot(DocumentSnapshot snapshot) =>
+      fromMap(snapshot.data);
 
   static Decision fromMap(Map<String, dynamic> doc) {
     Decision decision = Decision();

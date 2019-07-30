@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pros_cons/model/decision.dart';
@@ -5,17 +6,18 @@ import 'package:pros_cons/util.dart';
 import 'package:pros_cons/widgets/mood_icon.dart';
 
 class HistoryItem extends StatelessWidget {
-  final Decision decision;
   final Function onDelete;
+  final DocumentSnapshot snapshot;
 
   HistoryItem({
     Key key,
-    this.decision,
+    @required this.snapshot,
     this.onDelete,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Decision decision = Decision.fromSnapshot(snapshot);
     final description = describeScore(decision.totalScore);
     return GestureDetector(
       onTap: () {
@@ -87,22 +89,28 @@ class HistoryItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Expanded(
+              child: Text(
+                decision.objective,
+                overflow: TextOverflow.fade,
+                softWrap: true,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.blueGrey[500],
+                ),
+              ),
+            ),
+            SizedBox(width: 12.0),
             Text(
               "$description (${decision.totalScore.toStringAsFixed(0)})",
               style: TextStyle(
-                fontSize: 22.0,
+                fontSize: 16.0,
                 color: (decision.totalScore > 0) ? Colors.green : Colors.red,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            Text(
-              decision.objective,
-              overflow: TextOverflow.fade,
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.blueGrey[500],
-              ),
-            ),
+            SizedBox(width: 12.0),
             MoodIcon(mood: decision.mood),
           ],
         ),
