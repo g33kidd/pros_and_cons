@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pros_cons/display.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/screens/about.dart';
 import 'package:pros_cons/screens/ad_free.dart';
@@ -35,6 +34,7 @@ class _CheckLoginState extends State<CheckLogin> {
   }
 
   Future checkAnonymousLogin() async {
+    await Future.delayed(Duration.zero);
     final user = await FirebaseAuth.instance.signInAnonymously();
     await Future.delayed(Duration(milliseconds: 300));
     Provider.of<AppModel>(context).uid = user.uid;
@@ -72,6 +72,11 @@ class App extends StatelessWidget {
       home: CheckLogin(),
       theme: ThemeData(
         accentColor: purple,
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: purple,
+          elevation: 0,
+          behavior: SnackBarBehavior.fixed,
+        ),
         appBarTheme: AppBarTheme(
           color: purple,
           elevation: 0,

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/display.dart';
 import 'package:pros_cons/util.dart';
 

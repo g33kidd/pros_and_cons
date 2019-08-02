@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pros_cons/display.dart';
 
-import '../util.dart';
-
 /// TODO implement the settings screen and setup the SharedPreferences package.
 /// settings could also be saved to some user profile on Firebase maybe...
 

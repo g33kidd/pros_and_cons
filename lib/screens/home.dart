@@ -4,7 +4,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/model/app_model.dart';
-import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/app_drawer.dart';
 import 'package:pros_cons/widgets/history_item.dart';
 import 'package:pros_cons/widgets/no_history.dart';
@@ -29,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   setupAds() {
     _ads = Ads(
       "ca-app-pub-4846566520266716~9709175425",
-      testing: true,
+      testing: false,
       bannerUnitId: "ca-app-pub-4846566520266716/6725176015",
     );
 

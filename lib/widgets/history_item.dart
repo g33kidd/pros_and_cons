@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pros_cons/model/decision.dart';
+import 'package:pros_cons/screens/decision.dart';
 import 'package:pros_cons/util.dart';
 import 'package:pros_cons/widgets/mood_icon.dart';
 
@@ -22,17 +23,10 @@ class HistoryItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: purple,
-            content: Text(
-              "History detailed info is coming soon!",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DecisionResultsScreen(decision: decision),
           ),
         );
       },
@@ -112,6 +106,12 @@ class HistoryItem extends StatelessWidget {
             ),
             SizedBox(width: 12.0),
             MoodIcon(mood: decision.mood),
+            SizedBox(width: 8.0),
+            Icon(
+              Icons.chevron_right,
+              size: 22.0,
+              color: Colors.blueGrey[200],
+            ),
           ],
         ),
       ),

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pros_cons/components/new_decision_button.dart';
-import 'package:pros_cons/util.dart';
-import 'package:pros_cons/widgets/switcher.dart';
 
 class NoItemsAdded extends StatelessWidget {
   final Function onPressed;

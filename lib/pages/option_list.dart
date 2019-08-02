@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/argument_editor.dart';
-import 'package:pros_cons/widgets/no_history.dart';
 import 'package:pros_cons/widgets/no_items_added.dart';
 import 'package:provider/provider.dart';
 

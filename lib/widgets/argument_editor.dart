@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_fluid_slider/flutter_fluid_slider.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/switcher.dart';
 import 'package:pros_cons/util.dart';

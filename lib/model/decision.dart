@@ -80,6 +80,7 @@ class Decision {
     decision.conScore = doc['score']['con'];
     decision.proScore = doc['score']['pro'];
     decision.totalScore = doc['score']['total'];
+    decision.created = (doc['created'] as Timestamp).toDate();
     doc['arguments'].forEach((f) {
       decision.arguments.add(Option(
         title: f['title'],

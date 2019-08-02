@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/display.dart';
 import 'package:pros_cons/model/app_model.dart';
-import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/pages/objective.dart';
 import 'package:pros_cons/pages/option_list.dart';
 import 'package:pros_cons/pages/results.dart';
 import 'package:ads/ads.dart';
-import 'package:pros_cons/util.dart';
 import 'package:provider/provider.dart';
 
 class CreateScreen extends StatefulWidget {
@@ -18,7 +17,7 @@ class CreateScreen extends StatefulWidget {
 }
 
 class _CreateScreenState extends State<CreateScreen> {
-  final bool testing = true;
+  final bool testing = false;
   bool loading = false;
   int _page = 0;
   Ads _ads;
@@ -57,7 +56,6 @@ class _CreateScreenState extends State<CreateScreen> {
   Widget build(BuildContext context) {
     final app = Provider.of<AppModel>(context);
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("PROS & CONS", style: Display.titleStyle),
@@ -99,11 +97,13 @@ class _CreateScreenState extends State<CreateScreen> {
                     'decision_pros': app.decision.getPros.length,
                     'decision_mood': describeEnum(app.decision.mood),
                   });
+                  final user = await FirebaseAuth.instance.currentUser();
                   await Firestore.instance.collection('decisions').add(
                     {
                       'objective': app.decision.objective,
                       'mood': describeEnum(app.decision.mood),
                       'udid': app.udid,
+                      'user_id': user.uid,
                       'score': app.decision.buildScore(),
                       'created': app.decision.created.toUtc(),
                       'arguments': app.decision.arguments

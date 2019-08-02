@@ -14,6 +14,23 @@ String describeScore(score) {
   }
 }
 
+// Shows a snackbar with a specific theme.
+void showSnackbar(BuildContext context) {
+  Scaffold.of(context).showSnackBar(
+    SnackBar(
+      backgroundColor: purple,
+      content: Text(
+        "History detailed info is coming soon!",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18.0,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+  );
+}
+
 final funkyLinesDecoration = BoxDecoration(
   image: DecorationImage(
     image: AssetImage("assets/funky-lines.png"),
