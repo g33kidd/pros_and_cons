@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:pros_cons/display.dart';
 import 'package:pros_cons/util.dart';
 
+/// TODO fix suggestions so it's like a chat with the user almost, at least or have
+/// a way to let the user know their suggestion was implemented.
+
 class SuggestionScreen extends StatefulWidget {
   @override
   _SuggestionScreenState createState() => _SuggestionScreenState();

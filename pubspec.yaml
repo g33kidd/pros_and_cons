@@ -36,6 +36,7 @@ dependencies:
   ads: ^0.11.0
   path: ^1.6.2
   url_launcher: ^5.1.0
+  shared_preferences: ^0.5.3+4
   share: ^0.6.2
   # g33kstudios:
   #   path: ..\g33kstudios
