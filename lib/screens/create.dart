@@ -42,7 +42,13 @@ class _CreateScreenState extends State<CreateScreen> {
     );
   }
 
-  bool get isNext => (_page < 2);
+  bool get isNext => (_page < 1);
+
+  String get buttonLabelText {
+    if (_page == 0) return "NEXT";
+    if (_page == 1) return "SAVE & REVIEW";
+    if (_page == 2) return "FINISH";
+  }
 
   @override
   void dispose() {
@@ -72,14 +78,22 @@ class _CreateScreenState extends State<CreateScreen> {
                 size: 20.0,
               ),
               label: Text(
-                isNext ? "NEXT" : "SAVE & FINISH",
+                buttonLabelText,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18.0,
                 ),
               ),
               onPressed: () async {
-                if (_page == 2) {
+                if (_page < 2) {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                  pageController.nextPage(
+                    duration: Duration(milliseconds: 600),
+                    curve: Curves.easeInOutExpo,
+                  );
+                }
+
+                if (_page == 1) {
                   // TODO idk what to do about this...
                   // Ads don't show up half the time, but when they do it's cancelled because
                   // this is going out of View!
@@ -88,11 +102,11 @@ class _CreateScreenState extends State<CreateScreen> {
                     adUnitId: "ca-app-pub-4846566520266716/9132707300",
                     testing: testing,
                   );
-                  setState(() {
-                    loading = true;
-                  });
-                  await Future.delayed(Duration(seconds: 5));
-                  FirebaseAnalytics().logEvent(name: "finish", parameters: {
+                  // setState(() {
+                  //   loading = true;
+                  // });
+                  // await Future.delayed(Duration(seconds: 5));
+                  FirebaseAnalytics().logEvent(name: "review", parameters: {
                     'decision_cons': app.decision.getCons.length,
                     'decision_pros': app.decision.getPros.length,
                     'decision_mood': describeEnum(app.decision.mood),
@@ -117,16 +131,15 @@ class _CreateScreenState extends State<CreateScreen> {
                           .toList(),
                     },
                   );
-                  app.newDecision();
-                  Navigator.pop(context);
-
+                  // app.newDecision();
+                  // Navigator.pop(context);
                   // Navigator.popAndPushNamed(context, "/Home");
-                } else {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                  pageController.nextPage(
-                    duration: Duration(milliseconds: 600),
-                    curve: Curves.easeInOutExpo,
-                  );
+                }
+
+                if (_page == 2) {
+                  FirebaseAnalytics().logEvent(name: "review");
+                  Navigator.pop(context);
+                  app.newDecision();
                 }
               },
             ),

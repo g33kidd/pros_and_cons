@@ -1,3 +1,4 @@
+import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/widgets/mood_selection.dart';
@@ -26,17 +27,18 @@ class _ObjectivePageState extends State<ObjectivePage> {
         behavior: HitTestBehavior.opaque,
         onTap: () => FocusScope.of(context).requestFocus(new FocusNode()),
         child: Container(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
+          padding: const EdgeInsets.only(top: 24.0, left: 24.0, right: 24.0),
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text("Let's start with an objective.", style: _headerText),
               Text("What are you making a decision on?", style: _subHeaderText),
               SizedBox(height: 24.0),
               TextField(
                 textCapitalization: TextCapitalization.sentences,
-                maxLength: 28,
+                maxLength: 300,
+                maxLines: 4,
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
@@ -52,7 +54,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
                     app.decision.mood = m;
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),

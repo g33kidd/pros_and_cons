@@ -58,6 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("PROS & CONS"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.chat_bubble_outline),
+            onPressed: () => {Navigator.pushNamed(context, "/Chat")},
+          ),
+        ],
       ),
       drawer: AppDrawer(),
       body: StreamBuilder(

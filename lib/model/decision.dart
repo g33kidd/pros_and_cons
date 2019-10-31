@@ -17,6 +17,7 @@ OptionType getOptionTypeFromString(String value) {
 }
 
 class Decision {
+  String documentID;
   DateTime created;
   String objective = "";
   Mood mood = Mood.HAPPY;
@@ -70,8 +71,19 @@ class Decision {
     };
   }
 
-  static Decision fromSnapshot(DocumentSnapshot snapshot) =>
-      fromMap(snapshot.data);
+  // static Stream<DocumentSnapshot> all() {
+  //   return Firestore.instance
+  //       .collection('decisions')
+  //       .where('udid', isEqualTo: app.udid)
+  //       .orderBy('created', descending: true)
+  //       .snapshots()
+  // }
+
+  static Decision fromSnapshot(DocumentSnapshot snapshot) {
+    var decision = fromMap(snapshot.data);
+    decision.documentID = snapshot.documentID;
+    return decision;
+  }
 
   static Decision fromMap(Map<String, dynamic> doc) {
     Decision decision = Decision();

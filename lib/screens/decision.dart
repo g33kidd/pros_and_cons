@@ -271,20 +271,6 @@ class DecisionResultsScreen extends StatelessWidget {
                 "I just weighed my pros and cons for a decision on this app. Checkout PROS & CONS on the Play Store! http://bit.ly/32sRgb9",
                 subject: "PROS & CONS",
               );
-              // Scaffold.of(context).showSnackBar(
-              //   SnackBar(
-              //     backgroundColor: purple,
-              //     duration: Duration(seconds: 3),
-              //     content: Text(
-              //       "Thanks for sharing! ❤️ 🙌",
-              //       style: TextStyle(
-              //         color: Colors.white,
-              //         fontSize: 18.0,
-              //         fontWeight: FontWeight.w600,
-              //       ),
-              //     ),
-              //   ),
-              // );
             },
             padding: EdgeInsets.all(12.0),
             decoration: BoxDecoration(
