@@ -11,6 +11,13 @@ class ObjectivePage extends StatefulWidget {
 }
 
 class _ObjectivePageState extends State<ObjectivePage> {
+  bool suicidalSentiment = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle _headerText = TextStyle(
@@ -30,8 +37,6 @@ class _ObjectivePageState extends State<ObjectivePage> {
         child: Container(
           padding: const EdgeInsets.only(top: 24.0, left: 24.0, right: 24.0),
           child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            // mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text("Let's start with an objective.", style: _headerText),
               Text("What are you making a decision on?", style: _subHeaderText),
@@ -43,11 +48,56 @@ class _ObjectivePageState extends State<ObjectivePage> {
                 style: TextStyle(
                   fontSize: 18.0,
                 ),
-                onChanged: (s) => decisions.updateObjective(s),
+                onChanged: (s) {
+                  // Not super effective, but POC..
+                  if (s.trim().contains(RegExp(r'(kill)|(die)'))) {
+                    setState(() {
+                      suicidalSentiment = true;
+                    });
+                  } else {
+                    setState(() {
+                      suicidalSentiment = false;
+                    });
+                  }
+                  decisions.updateObjective(s);
+                },
               ),
-              SizedBox(height: 24.0),
+              SizedBox(height: 16.0),
+              if (suicidalSentiment)
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: Colors.green[100],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "SuicidePreventionLifeline.org",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(height: 16.0),
+                      Text(
+                        "If you’re in crisis, there are options available to help you cope. You can also call the Lifeline at any time to speak to someone and get support. For confidential support available 24/7 for everyone in the United States, call 1-800-273-8255.",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+              SizedBox(height: 16.0),
               Text("How are you feeling about it?", style: _headerText),
               Text("This will come in handy later.", style: _subHeaderText),
+              // TODO convert into an emoji picker instead of a "Mood".
+              // mood should still be a thing "happy" "sad" "angry" etc.. but should be set based on the emoji.
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 23.0),
                 child: MoodSelection(

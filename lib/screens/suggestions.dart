@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:pros_cons/display.dart';
 import 'package:pros_cons/util.dart';
 import 'package:pros_cons/widgets/app_scaffold.dart';
 
@@ -63,12 +62,10 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                 color: purple,
                 textColor: Colors.white,
                 onPressed: () async {
-                  await Firestore.instance.collection('suggestions').add(
-                    {
-                      'title': title,
-                      'suggestion': body,
-                    },
-                  );
+                  await Firestore.instance.collection('suggestions').add({
+                    'title': title,
+                    'suggestion': body,
+                  });
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       content: Text("Thanks for the suggestion!"),
