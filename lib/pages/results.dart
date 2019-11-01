@@ -1,7 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:pros_cons/model/app_model.dart';
+import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/util.dart';
 import 'package:pros_cons/widgets/button_base.dart';
@@ -19,8 +19,8 @@ class ResultsPage extends StatefulWidget {
 class _ResultsPageState extends State<ResultsPage> {
   @override
   Widget build(BuildContext context) {
-    final app = Provider.of<AppModel>(context);
-    final decision = app.decision;
+    final decisions = Provider.of<DecisionsModel>(context);
+    final decision = decisions.decision;
 
     decision.buildScore();
 

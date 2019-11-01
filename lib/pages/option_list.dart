@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
+import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/widgets/argument_editor.dart';
 import 'package:pros_cons/widgets/no_items_added.dart';
 import 'package:provider/provider.dart';
@@ -31,8 +31,8 @@ class _OptionListPageState extends State<OptionListPage> {
     super.dispose();
   }
 
-  void addOption(app) {
-    app.addOption();
+  void addOption(decisions) {
+    decisions.addOption();
     final newNode = FocusNode();
     focusNodes.add(newNode);
     Future.delayed(
@@ -52,11 +52,11 @@ class _OptionListPageState extends State<OptionListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppModel>(builder: (context, app, child) {
-      final options = app.options;
+    return Consumer<DecisionsModel>(builder: (context, decisions, child) {
+      final options = decisions.options;
 
       if (options.length == 0)
-        return NoItemsAdded(onPressed: () => addOption(app));
+        return NoItemsAdded(onPressed: () => addOption(decisions));
 
       return Container(
         child: Column(
@@ -78,18 +78,18 @@ class _OptionListPageState extends State<OptionListPage> {
                     focusNode: focusNodes[index],
                     onImportanceUpdate: (double value) {
                       f.importance = value;
-                      app.updateOption(index, f);
+                      decisions.updateOption(index, f);
                     },
                     onDeletePressed: () {
-                      app.deleteOptionAt(index);
+                      decisions.deleteOptionAt(index);
                     },
                     onTextChanged: (String value) {
                       f.title = value;
-                      app.updateOption(index, f);
+                      decisions.updateOption(index, f);
                     },
                     onTypeChanged: (OptionType type) {
                       f.type = type;
-                      app.updateOption(index, f);
+                      decisions.updateOption(index, f);
                     },
                   );
                 },
@@ -102,7 +102,7 @@ class _OptionListPageState extends State<OptionListPage> {
                   size: 28.0,
                 ),
                 label: Text("ADD ARGUMENT", style: TextStyle(fontSize: 20.0)),
-                onPressed: () => addOption(app),
+                onPressed: () => addOption(decisions),
               ),
             ),
           ],

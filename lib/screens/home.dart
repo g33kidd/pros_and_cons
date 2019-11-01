@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/model/app_model.dart';
+import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/widgets/app_drawer.dart';
 import 'package:pros_cons/widgets/history_item.dart';
 import 'package:pros_cons/widgets/no_history.dart';
@@ -104,7 +105,7 @@ class HistoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final app = Provider.of<AppModel>(context);
+    final decisions = Provider.of<DecisionsModel>(context);
 
     if (documents.length > 0)
       return Column(
@@ -123,7 +124,7 @@ class HistoryList extends StatelessWidget {
                     'position': "history_list",
                   },
                 );
-                app.newDecision();
+                decisions.newDecision();
                 Navigator.pushNamed(context, "/Create");
               },
             ),

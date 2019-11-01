@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/display.dart';
 import 'package:pros_cons/model/app_model.dart';
+import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/pages/objective.dart';
 import 'package:pros_cons/pages/option_list.dart';
 import 'package:pros_cons/pages/results.dart';
@@ -38,7 +39,7 @@ class _CreateScreenState extends State<CreateScreen> {
 
     Future.delayed(
       Duration(milliseconds: 300),
-      () => Provider.of<AppModel>(context).decision.arguments.clear(),
+      () => Provider.of<DecisionsModel>(context).clearOptions(),
     );
   }
 
@@ -48,6 +49,7 @@ class _CreateScreenState extends State<CreateScreen> {
     if (_page == 0) return "NEXT";
     if (_page == 1) return "SAVE & REVIEW";
     if (_page == 2) return "FINISH";
+    return "FINISH";
   }
 
   @override
@@ -60,6 +62,7 @@ class _CreateScreenState extends State<CreateScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final decisions = Provider.of<DecisionsModel>(context);
     final app = Provider.of<AppModel>(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -107,20 +110,20 @@ class _CreateScreenState extends State<CreateScreen> {
                   // });
                   // await Future.delayed(Duration(seconds: 5));
                   FirebaseAnalytics().logEvent(name: "review", parameters: {
-                    'decision_cons': app.decision.getCons.length,
-                    'decision_pros': app.decision.getPros.length,
-                    'decision_mood': describeEnum(app.decision.mood),
+                    'decision_cons': decisions.conArgs.length,
+                    'decision_pros': decisions.proArgs.length,
+                    'decision_mood': describeEnum(decisions.decision.mood),
                   });
                   final user = await FirebaseAuth.instance.currentUser();
                   await Firestore.instance.collection('decisions').add(
                     {
-                      'objective': app.decision.objective,
-                      'mood': describeEnum(app.decision.mood),
+                      'objective': decisions.decision.objective,
+                      'mood': describeEnum(decisions.decision.mood),
                       'udid': app.udid,
                       'user_id': user.uid,
-                      'score': app.decision.buildScore(),
-                      'created': app.decision.created.toUtc(),
-                      'arguments': app.decision.arguments
+                      'score': decisions.decision.buildScore(),
+                      'created': decisions.decision.created.toUtc(),
+                      'arguments': decisions.decision.arguments
                           .map(
                             (a) => {
                               'title': a.title,
@@ -139,7 +142,7 @@ class _CreateScreenState extends State<CreateScreen> {
                 if (_page == 2) {
                   FirebaseAnalytics().logEvent(name: "review");
                   Navigator.pop(context);
-                  app.newDecision();
+                  decisions.newDecision();
                 }
               },
             ),

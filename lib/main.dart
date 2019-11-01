@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
+import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/screens/about.dart';
 import 'package:pros_cons/screens/ad_free.dart';
 import 'package:pros_cons/screens/chat.dart';
@@ -15,8 +16,11 @@ import 'package:firebase_analytics/observer.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      builder: (_) => AppModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(builder: (_) => AppModel()),
+        ChangeNotifierProvider(builder: (_) => DecisionsModel()),
+      ],
       child: App(),
     ),
   );
@@ -61,8 +65,9 @@ class _CheckLoginState extends State<CheckLogin> {
 
 class App extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
-  static FirebaseAnalyticsObserver observer =
-      FirebaseAnalyticsObserver(analytics: analytics);
+  static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(
+    analytics: analytics,
+  );
 
   @override
   Widget build(BuildContext context) {
