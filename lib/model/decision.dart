@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
 enum OptionType { PRO, CON }
@@ -36,6 +37,14 @@ class Decision {
 
   List<Option> get getCons =>
       arguments.where((o) => o.type == OptionType.CON).toList();
+
+  List<Map<String, dynamic>> get argumentsList => arguments.map((a) {
+        return {
+          'title': a.title,
+          'importance': a.importance,
+          'type': describeEnum(a.type)
+        };
+      }).toList();
 
   Decision() {
     created = DateTime.now();
@@ -78,6 +87,10 @@ class Decision {
   //       .orderBy('created', descending: true)
   //       .snapshots()
   // }
+
+  static Future<DocumentReference> insert(Map<String, dynamic> data) async {
+    return await Firestore.instance.collection('decisions').add(data);
+  }
 
   static Decision fromSnapshot(DocumentSnapshot snapshot) {
     var decision = fromMap(snapshot.data);

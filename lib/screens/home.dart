@@ -6,6 +6,7 @@ import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/widgets/app_drawer.dart';
+import 'package:pros_cons/widgets/app_scaffold.dart';
 import 'package:pros_cons/widgets/history_item.dart';
 import 'package:pros_cons/widgets/no_history.dart';
 import 'package:provider/provider.dart';
@@ -18,31 +19,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Ads _ads;
-
   @override
   void initState() {
     super.initState();
-    setupAds();
-  }
-
-  setupAds() {
-    _ads = Ads(
-      "ca-app-pub-4846566520266716~9709175425",
-      testing: false,
-      bannerUnitId: "ca-app-pub-4846566520266716/6725176015",
-    );
-
-    _ads.showBannerAd(
-      anchorOffset: 50.0,
-    );
-
-    Future.delayed(Duration(seconds: 10), () => _ads.hideBannerAd());
   }
 
   @override
   void dispose() {
-    _ads.dispose();
     super.dispose();
   }
 
@@ -55,22 +38,20 @@ class _HomeScreenState extends State<HomeScreen> {
         .orderBy('created', descending: true)
         .snapshots();
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text("PROS & CONS"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.chat_bubble_outline),
-            onPressed: () => {Navigator.pushNamed(context, "/Chat")},
-          ),
-        ],
-      ),
+    return AppScaffold(
+      title: "PROS & CONS",
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.chat_bubble_outline),
+          onPressed: () => {Navigator.pushNamed(context, "/Chat")},
+        ),
+      ],
       drawer: AppDrawer(),
       body: StreamBuilder(
         stream: query,
-        builder: (_, AsyncSnapshot<QuerySnapshot> snapshot) =>
-            HistoryBuilder(snapshot: snapshot),
+        builder: (_, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return HistoryBuilder(snapshot: snapshot);
+        },
       ),
     );
   }
