@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import '../util.dart';
 
 enum OptionType { PRO, CON }
 enum Mood { HAPPY, MEH, SAD }
@@ -31,6 +34,10 @@ class Decision {
   double totalScore = 0;
 
   String get key => created.toIso8601String();
+
+  Color get scoreTextColor => totalScore < 0 ? red : green;
+  Color get moodTextColor =>
+      (mood != Mood.MEH) ? (mood == Mood.HAPPY ? green : red) : Colors.orange;
 
   List<Option> get getPros =>
       arguments.where((o) => o.type == OptionType.PRO).toList();

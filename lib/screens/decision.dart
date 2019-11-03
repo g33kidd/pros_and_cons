@@ -1,13 +1,10 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pros_cons/model/decision.dart';
-import 'package:pros_cons/widgets/button_base.dart';
 import 'package:pros_cons/widgets/result_card.dart';
-import 'package:share/share.dart';
+import 'package:pros_cons/widgets/share_button.dart';
 
-import '../display.dart';
 import '../util.dart';
 
 class DecisionResultsScreen extends StatelessWidget {
@@ -84,9 +81,7 @@ class DecisionResultsScreen extends StatelessWidget {
               Text(
                 "You are feeling $mood about it.",
                 style: TextStyle(
-                  color: (decision.mood != Mood.MEH)
-                      ? (decision.mood == Mood.HAPPY ? green : red)
-                      : Colors.orange,
+                  color: decision.moodTextColor,
                   fontSize: 16.0,
                   fontWeight: FontWeight.w800,
                 ),
@@ -113,78 +108,10 @@ class DecisionResultsScreen extends StatelessWidget {
             color: Colors.blueGrey[50],
             children: <Widget>[
               ...decision.getPros
-                  .map(
-                    (f) => Padding(
-                      padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            describeEnum(f.type),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 16.0,
-                              color: (f.type == OptionType.CON ? red : green),
-                            ),
-                          ),
-                          SizedBox(width: 24.0),
-                          Expanded(
-                            child: Text(
-                              f.title,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "+${f.importance.toStringAsFixed(0)}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                  .map((it) => ArgumentListItem(option: it))
                   .toList(),
               ...decision.getCons
-                  .map(
-                    (f) => Padding(
-                      padding: EdgeInsets.only(bottom: 8.0, top: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            describeEnum(f.type),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 16.0,
-                              color: (f.type == OptionType.CON ? red : green),
-                            ),
-                          ),
-                          SizedBox(width: 24.0),
-                          Expanded(
-                            child: Text(
-                              f.title,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "-${f.importance.toStringAsFixed(0)}",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
+                  .map((it) => ArgumentListItem(option: it))
                   .toList(),
             ],
           ),
@@ -256,7 +183,7 @@ class DecisionResultsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 32.0,
                       fontWeight: FontWeight.w900,
-                      color: (decision.totalScore < 0) ? red : green,
+                      color: decision.scoreTextColor,
                     ),
                   ),
                 ],
@@ -264,26 +191,50 @@ class DecisionResultsScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 22.0),
-          ButtonBase(
-            onPressed: () async {
-              FirebaseAnalytics().logEvent(name: "social_share");
-              await Share.share(
-                "I just weighed my pros and cons for a decision on this app. Checkout PROS & CONS on the Play Store! http://bit.ly/32sRgb9",
-                subject: "PROS & CONS",
-              );
-            },
-            padding: EdgeInsets.all(12.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6.0),
-              color: Colors.pinkAccent,
+          ShareButton(),
+        ],
+      ),
+    );
+  }
+}
+
+class ArgumentListItem extends StatelessWidget {
+  final Option option;
+
+  ArgumentListItem({this.option});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            describeEnum(option.type),
+            style: TextStyle(
+              fontWeight: FontWeight.w900,
+              fontSize: 16.0,
+              color: (option.type == OptionType.CON ? red : green),
             ),
-            child: Center(
-              child: Text(
-                "Helpful? Share app with Friends",
-                style: Display.buttonStyle.copyWith(fontSize: 16.0),
+          ),
+          SizedBox(width: 24.0),
+          Expanded(
+            child: Text(
+              option.title,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16.0,
               ),
             ),
-          )
+          ),
+          Text(
+            "+${option.importance.toStringAsFixed(0)}",
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 16.0,
+            ),
+          ),
         ],
       ),
     );
