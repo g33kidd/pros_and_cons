@@ -92,7 +92,7 @@ class HistoryList extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(
-              top: 12.0,
+              top: 16.0,
               left: 12.0,
               right: 12.0,
             ),
@@ -100,9 +100,7 @@ class HistoryList extends StatelessWidget {
               onPressed: () {
                 FirebaseAnalytics().logEvent(
                   name: "new_decision",
-                  parameters: {
-                    'position': "history_list",
-                  },
+                  parameters: {'position': "history_list"},
                 );
                 decisions.newDecision();
                 Navigator.pushNamed(context, "/Create");

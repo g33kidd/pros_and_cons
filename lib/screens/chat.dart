@@ -14,6 +14,25 @@ class _ChatScreenState extends State<ChatScreen> {
   final ScrollController listScrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration(milliseconds: 1000), () {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Experimental Chat"),
+            content: Text(
+              "This is a new feature that is being actively developed in production! You may use it as you wish, but please note this is not the final product and data may be deleted.\n\nThis new place is a chat room for everybody to get help with decisions or just chat for the heck of it.\n\nYou can share a decision with anybody by using the + icon at the bottom. More features will be coming to this section soon and with more updated designs.",
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,

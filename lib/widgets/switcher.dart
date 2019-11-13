@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/util.dart';
+import 'package:provider/provider.dart';
 
 class Switcher extends StatefulWidget {
   final void Function(OptionType) onChanged;
@@ -23,6 +25,7 @@ class _SwitcherState extends State<Switcher> {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     final TextStyle _style = TextStyle(
       fontSize: 23.5,
       color: Colors.white,
@@ -39,7 +42,7 @@ class _SwitcherState extends State<Switcher> {
             onTap: () => onTap(OptionType.CON),
             child: Container(
               padding: padding,
-              color: isCon ? red : grey,
+              color: isCon ? red : Colors.grey,
               child: FittedBox(
                 child: Text("C", style: _style),
               ),
@@ -50,7 +53,7 @@ class _SwitcherState extends State<Switcher> {
             onTap: () => onTap(OptionType.PRO),
             child: Container(
               padding: padding,
-              color: isPro ? green : grey,
+              color: isPro ? green : Colors.grey,
               child: FittedBox(
                 child: Text("P", style: _style),
               ),

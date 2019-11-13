@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/widgets/argument_editor.dart';
@@ -52,6 +53,7 @@ class _OptionListPageState extends State<OptionListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     return Consumer<DecisionsModel>(builder: (context, decisions, child) {
       final options = decisions.options;
 
@@ -100,8 +102,15 @@ class _OptionListPageState extends State<OptionListPage> {
                 icon: Icon(
                   Icons.add_box,
                   size: 28.0,
+                  color: darkMode ? Colors.grey : Colors.black,
                 ),
-                label: Text("ADD ARGUMENT", style: TextStyle(fontSize: 20.0)),
+                label: Text(
+                  "ADD ARGUMENT",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: darkMode ? Colors.grey : Colors.black,
+                  ),
+                ),
                 onPressed: () => addOption(decisions),
               ),
             ),

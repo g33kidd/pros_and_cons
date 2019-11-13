@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/util.dart';
@@ -19,6 +20,7 @@ class ResultsPage extends StatefulWidget {
 class _ResultsPageState extends State<ResultsPage> {
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     final decisions = Provider.of<DecisionsModel>(context);
     final decision = decisions.decision;
 
@@ -101,6 +103,7 @@ class _ResultsPageState extends State<ResultsPage> {
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w600,
+            color: darkMode ? Colors.grey : Colors.black,
           ),
         ),
         SizedBox(height: 12.0),
@@ -196,6 +199,7 @@ class _ResultsPageState extends State<ResultsPage> {
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.w600,
+            color: darkMode ? Colors.grey : Colors.black,
           ),
         ),
         SizedBox(height: 12.0),

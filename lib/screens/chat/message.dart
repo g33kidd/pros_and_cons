@@ -49,7 +49,11 @@ class Message extends StatelessWidget {
             future: document['decision'].get(),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData) {
-                return DecisionCard(Decision.fromSnapshot(snapshot.data));
+                if (snapshot.data.exists) {
+                  return DecisionCard(Decision.fromSnapshot(snapshot.data));
+                } else {
+                  return DecisionCard(Decision(), maybeDeleted: true);
+                }
               } else {
                 return Offstage();
               }
@@ -64,11 +68,27 @@ class DecisionCard extends StatelessWidget {
   final Decision decision;
   final Function onPressed;
   final Color color;
+  final bool maybeDeleted;
 
-  DecisionCard(this.decision, {this.onPressed, this.color});
+  DecisionCard(this.decision, {this.onPressed, this.color, this.maybeDeleted});
 
   @override
   Widget build(BuildContext context) {
+    if (maybeDeleted != null && maybeDeleted) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(12.0),
+        margin: EdgeInsets.only(top: 6.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6.0),
+          color: color ?? Colors.blueGrey[50],
+        ),
+        child: Center(
+          child: Text("Decision was deleted/no longer exists."),
+        ),
+      );
+    }
+
     return GestureDetector(
       onTap: () {
         if (onPressed != null) {

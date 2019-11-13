@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
+import 'package:pros_cons/widgets/app_scaffold.dart';
 import 'package:pros_cons/widgets/result_card.dart';
 import 'package:pros_cons/widgets/share_button.dart';
+import 'package:provider/provider.dart';
 
 import '../util.dart';
 
@@ -14,6 +17,7 @@ class DecisionResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     final total = decision.totalScore;
     final threshold =
         (decision.proScore + decision.conScore) / decision.arguments.length;
@@ -36,11 +40,8 @@ class DecisionResultsScreen extends StatelessWidget {
 
     final mood = describeEnum(decision.mood);
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text("RESULTS"),
-      ),
+    return AppScaffold(
+      title: "RESULTS",
       body: ListView(
         padding: EdgeInsets.all(18.0),
         children: <Widget>[
@@ -59,20 +60,21 @@ class DecisionResultsScreen extends StatelessWidget {
           SizedBox(height: 18.0),
           ResultsCard(
             column: true,
-            color: Colors.blueGrey[50],
+            color: !darkMode ? Colors.blueGrey[50] : Color(0xFF191919),
             children: <Widget>[
               Text(
                 DateFormat().format(decision.created),
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.w800,
+                  color: darkMode ? Colors.white : Colors.black,
                 ),
               ),
               SizedBox(height: 8.0),
               Text(
                 decision.objective,
                 style: TextStyle(
-                  color: Colors.blueGrey[700],
+                  color: Colors.blueGrey[500],
                   fontSize: 20.0,
                   fontWeight: FontWeight.w600,
                 ),
@@ -94,6 +96,7 @@ class DecisionResultsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w600,
+              color: darkMode ? Colors.white : Colors.black,
             ),
           ),
           SizedBox(height: 12.0),
@@ -105,7 +108,7 @@ class DecisionResultsScreen extends StatelessWidget {
               top: 8.0,
               bottom: 8.0,
             ),
-            color: Colors.blueGrey[50],
+            color: !darkMode ? Colors.blueGrey[50] : Color(0xFF191919),
             children: <Widget>[
               ...decision.getPros
                   .map((it) => ArgumentListItem(option: it))
@@ -121,6 +124,7 @@ class DecisionResultsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.0,
               fontWeight: FontWeight.w600,
+              color: darkMode ? Colors.white : Colors.black,
             ),
           ),
           SizedBox(height: 12.0),
@@ -128,7 +132,7 @@ class DecisionResultsScreen extends StatelessWidget {
             row: true,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
-            color: Colors.blueGrey[50],
+            color: !darkMode ? Colors.blueGrey[50] : Color(0xFF191919),
             children: <Widget>[
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +148,10 @@ class DecisionResultsScreen extends StatelessWidget {
                   SizedBox(height: 12.0),
                   Text(
                     decision.proScore.toStringAsFixed(0),
-                    style: TextStyle(fontSize: 32.0),
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      color: darkMode ? Colors.white : Colors.black,
+                    ),
                   ),
                 ],
               ),
@@ -163,7 +170,10 @@ class DecisionResultsScreen extends StatelessWidget {
                   SizedBox(height: 12.0),
                   Text(
                     decision.conScore.toStringAsFixed(0),
-                    style: TextStyle(fontSize: 32.0),
+                    style: TextStyle(
+                      fontSize: 32.0,
+                      color: darkMode ? Colors.white : Colors.black,
+                    ),
                   ),
                 ],
               ),
@@ -175,6 +185,7 @@ class DecisionResultsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w900,
+                      color: darkMode ? Colors.white : Colors.black,
                     ),
                   ),
                   SizedBox(height: 12.0),
@@ -205,6 +216,7 @@ class ArgumentListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     return Padding(
       padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Row(
@@ -225,6 +237,7 @@ class ArgumentListItem extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16.0,
+                color: darkMode ? Colors.white : Colors.black,
               ),
             ),
           ),
@@ -233,6 +246,7 @@ class ArgumentListItem extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 16.0,
+              color: darkMode ? Colors.white : Colors.black,
             ),
           ),
         ],

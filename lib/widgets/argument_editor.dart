@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/switcher.dart';
 import 'package:pros_cons/util.dart';
+import 'package:provider/provider.dart';
 
 class ArgumentEditor extends StatefulWidget {
   final bool firstItem;
@@ -50,6 +52,7 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     EdgeInsetsGeometry padding = EdgeInsets.only(
       left: 16.0,
       right: 16.0,
@@ -83,6 +86,9 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
                   textCapitalization: TextCapitalization.sentences,
                   controller: _textEditingController,
                   focusNode: widget.focusNode,
+                  style: TextStyle(
+                    color: darkMode ? Colors.white : Colors.black,
+                  ),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(12.5),
                     hintText: "Edit me...",

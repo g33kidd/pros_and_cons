@@ -71,74 +71,139 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Pros & Cons",
-      debugShowCheckedModeBanner: false,
-      navigatorObservers: <NavigatorObserver>[observer],
-      home: CheckLogin(),
-      theme: ThemeData(
-        accentColor: purple,
-        snackBarTheme: SnackBarThemeData(
-          backgroundColor: purple,
-          elevation: 0,
-          behavior: SnackBarBehavior.fixed,
-        ),
-        appBarTheme: AppBarTheme(
-          color: purple,
-          elevation: 0,
-          iconTheme: IconThemeData(
-            color: Colors.white,
+    return Consumer<AppModel>(builder: (context, app, child) {
+      return MaterialApp(
+        title: "Pros & Cons",
+        debugShowCheckedModeBanner: false,
+        navigatorObservers: <NavigatorObserver>[observer],
+        home: CheckLogin(),
+        themeMode: app.darkMode ? ThemeMode.dark : ThemeMode.light,
+        theme: ThemeData(
+          accentColor: purple,
+          snackBarTheme: SnackBarThemeData(
+            backgroundColor: purple,
+            elevation: 0,
+            behavior: SnackBarBehavior.fixed,
           ),
-          textTheme: TextTheme(
-            title: TextStyle(
+          appBarTheme: AppBarTheme(
+            color: purple,
+            elevation: 0,
+            iconTheme: IconThemeData(
               color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 20.0,
+            ),
+            textTheme: TextTheme(
+              title: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 20.0,
+              ),
+            ),
+          ),
+          bottomAppBarTheme: BottomAppBarTheme(color: purple),
+          sliderTheme: SliderThemeData(
+            activeTrackColor: purple,
+            inactiveTrackColor: Colors.black12,
+            trackHeight: 6.0,
+            valueIndicatorColor: purple,
+            thumbColor: purple,
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+            overlayColor: purple.withAlpha(52),
+            overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
+            activeTickMarkColor: Colors.white.withAlpha(25),
+            inactiveTickMarkColor: Colors.black.withAlpha(14),
+            tickMarkShape: RoundSliderTickMarkShape(
+              tickMarkRadius: 3.0,
+            ),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: EdgeInsets.all(16.0),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6.0),
+              borderSide: BorderSide(
+                color: Colors.black12,
+                width: 2.0,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6.0),
+              borderSide: BorderSide(color: purple, width: 2.5),
             ),
           ),
         ),
-        bottomAppBarTheme: BottomAppBarTheme(color: purple),
-        sliderTheme: SliderThemeData(
-          activeTrackColor: purple,
-          inactiveTrackColor: Colors.black12,
-          trackHeight: 6.0,
-          valueIndicatorColor: purple,
-          thumbColor: purple,
-          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
-          overlayColor: purple.withAlpha(52),
-          overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
-          activeTickMarkColor: Colors.white.withAlpha(25),
-          inactiveTickMarkColor: Colors.black.withAlpha(14),
-          tickMarkShape: RoundSliderTickMarkShape(
-            tickMarkRadius: 3.0,
+        darkTheme: ThemeData(
+          accentColor: purple,
+          canvasColor: Color(0xFF333333),
+          snackBarTheme: SnackBarThemeData(
+            backgroundColor: purple,
+            elevation: 0,
+            behavior: SnackBarBehavior.fixed,
           ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.all(16.0),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            borderSide: BorderSide(
-              color: Colors.black12,
-              width: 2.0,
+          appBarTheme: AppBarTheme(
+            color: purple,
+            elevation: 0,
+            iconTheme: IconThemeData(
+              color: Colors.white,
+            ),
+            textTheme: TextTheme(
+              title: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 20.0,
+              ),
             ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            borderSide: BorderSide(color: purple, width: 2.5),
+          bottomAppBarTheme: BottomAppBarTheme(color: purple),
+          dividerTheme: DividerThemeData(
+            color: Color(0xFF333333),
+            thickness: 1.0,
+          ),
+          sliderTheme: SliderThemeData(
+            activeTrackColor: purple,
+            inactiveTrackColor: Colors.black12,
+            trackHeight: 6.0,
+            valueIndicatorColor: purple,
+            thumbColor: purple,
+            thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+            overlayColor: purple.withAlpha(52),
+            overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
+            activeTickMarkColor: Colors.white.withAlpha(25),
+            inactiveTickMarkColor: Colors.black.withAlpha(14),
+            tickMarkShape: RoundSliderTickMarkShape(
+              tickMarkRadius: 3.0,
+            ),
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Color(0xFF191919),
+            contentPadding: EdgeInsets.all(16.0),
+            counterStyle: TextStyle(
+              color: Colors.grey[200],
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6.0),
+              borderSide: BorderSide(
+                color: Colors.black12,
+                width: 2.0,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6.0),
+              borderSide: BorderSide(color: purple, width: 2.5),
+            ),
           ),
         ),
-      ),
-      routes: {
-        "/Home": (_) => HomeScreen(),
-        "/Create": (_) => CreateScreen(),
-        "/RemoveAds": (_) => AdFreeScreen(),
-        "/Settings": (_) => SettingsScreen(),
-        "/Chat": (_) => ChatScreen(),
-        "/Suggest": (_) => SuggestionScreen(),
-        "/About": (_) => AboutScreen(),
-      },
-    );
+        routes: {
+          "/Home": (_) => HomeScreen(),
+          "/Create": (_) => CreateScreen(),
+          "/RemoveAds": (_) => AdFreeScreen(),
+          "/Settings": (_) => SettingsScreen(),
+          "/Chat": (_) => ChatScreen(),
+          "/Suggest": (_) => SuggestionScreen(),
+          "/About": (_) => AboutScreen(),
+        },
+      );
+    });
   }
 }

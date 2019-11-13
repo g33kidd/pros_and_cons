@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/screens/chat/message.dart';
@@ -28,6 +30,7 @@ class _MessageBuilderState extends State<MessageBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,25 +74,51 @@ class _MessageBuilderState extends State<MessageBuilder> {
                                 child: Text("Whoops... there was an error!"),
                               );
 
-                            if (snapshot.hasData)
-                              return ListView.builder(
-                                itemCount: snapshot.data.documents.length,
-                                itemBuilder: (context, index) {
-                                  var _decision = Decision.fromSnapshot(
-                                    snapshot.data.documents[index],
-                                  );
-                                  return DecisionCard(
-                                    _decision,
-                                    color: Colors.white,
-                                    onPressed: () {
-                                      setState(() {
-                                        decision = _decision;
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                              );
+                            if (snapshot.hasData) {
+                              if (snapshot.data.documents.length != 0) {
+                                return ListView.builder(
+                                  itemCount: snapshot.data.documents.length,
+                                  itemBuilder: (context, index) {
+                                    var _decision = Decision.fromSnapshot(
+                                      snapshot.data.documents[index],
+                                    );
+                                    return DecisionCard(
+                                      _decision,
+                                      color: Colors.white,
+                                      onPressed: () {
+                                        setState(() {
+                                          decision = _decision;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                );
+                              } else {
+                                return Column(
+                                  children: <Widget>[
+                                    Text(
+                                      "Looks like you don't have decisions to share.\nTry creating one below.",
+                                    ),
+                                    SizedBox(height: 20.0),
+                                    NewDecisionButton(
+                                      onPressed: () {
+                                        FirebaseAnalytics().logEvent(
+                                          name: "new_decision",
+                                          parameters: {
+                                            'position': "chat_message_builder",
+                                          },
+                                        );
+                                        Navigator.popAndPushNamed(
+                                          context,
+                                          "/Create",
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }
+                            }
 
                             return Center(
                               child: CircularProgressIndicator(),
@@ -105,6 +134,9 @@ class _MessageBuilderState extends State<MessageBuilder> {
                 child: TextField(
                   controller: textEditingController,
                   focusNode: focusNode,
+                  style: TextStyle(
+                    color: darkMode ? Colors.white : Colors.black,
+                  ),
                   decoration: InputDecoration(
                     hintText: "Type your message...",
                   ),
@@ -141,16 +173,17 @@ class _MessageBuilderState extends State<MessageBuilder> {
         };
 
         if (decision != null) {
-          values.addAll(
-            {
-              'decision': Firestore.instance
-                  .document("decisions/" + decision.documentID)
-            },
-          );
+          values.addAll({
+            'decision':
+                Firestore.instance.document("decisions/" + decision.documentID)
+          });
         }
 
         // return;
         await transaction.set(docRef, values);
+        setState(() {
+          decision = null;
+        });
       });
 
       textEditingController.clear();

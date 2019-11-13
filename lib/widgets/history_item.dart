@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/screens/decision.dart';
 import 'package:pros_cons/util.dart';
 import 'package:pros_cons/widgets/mood_icon.dart';
+import 'package:provider/provider.dart';
 
 class HistoryItem extends StatelessWidget {
   final Function onDelete;
@@ -18,6 +20,7 @@ class HistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     Decision decision = Decision.fromSnapshot(snapshot);
     final description = describeScore(decision.totalScore);
     return GestureDetector(
@@ -75,7 +78,7 @@ class HistoryItem extends StatelessWidget {
         ),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.blueGrey[50],
+          color: !darkMode ? Colors.blueGrey[50] : Color(0xFF191919),
           borderRadius: BorderRadius.circular(6.0),
         ),
         child: Row(

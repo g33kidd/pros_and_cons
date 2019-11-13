@@ -20,14 +20,17 @@ class _ObjectivePageState extends State<ObjectivePage> {
 
   @override
   Widget build(BuildContext context) {
+    final darkMode = Provider.of<AppModel>(context).darkMode;
     TextStyle _headerText = TextStyle(
       fontSize: 22.0,
       fontWeight: FontWeight.w600,
+      color: darkMode ? Colors.white : Colors.grey[900],
     );
 
     TextStyle _subHeaderText = TextStyle(
       fontSize: 18.0,
       fontWeight: FontWeight.w400,
+      color: darkMode ? Colors.grey : Colors.grey[900],
     );
 
     return Consumer<DecisionsModel>(builder: (context, decisions, snapshot) {
@@ -39,6 +42,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
           child: ListView(
             children: <Widget>[
               Text("Let's start with an objective.", style: _headerText),
+              SizedBox(height: 6.0),
               Text("What are you making a decision on?", style: _subHeaderText),
               SizedBox(height: 24.0),
               TextField(
@@ -47,6 +51,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
                 maxLines: 4,
                 style: TextStyle(
                   fontSize: 18.0,
+                  color: darkMode ? Colors.white : Colors.black,
                 ),
                 onChanged: (s) {
                   // Not super effective, but POC..
@@ -95,6 +100,7 @@ class _ObjectivePageState extends State<ObjectivePage> {
 
               SizedBox(height: 16.0),
               Text("How are you feeling about it?", style: _headerText),
+              SizedBox(height: 6.0),
               Text("This will come in handy later.", style: _subHeaderText),
               // TODO convert into an emoji picker instead of a "Mood".
               // mood should still be a thing "happy" "sad" "angry" etc.. but should be set based on the emoji.
