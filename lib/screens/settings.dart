@@ -11,7 +11,9 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("PROS & CONS", style: Display.titleStyle),
       ),
-      body: Container(),
+      body: ListView(
+        children: <Widget>[],
+      ),
     );
   }
 }

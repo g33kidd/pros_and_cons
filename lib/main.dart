@@ -92,7 +92,7 @@ class App extends StatelessWidget {
               color: Colors.white,
             ),
             textTheme: TextTheme(
-              title: TextStyle(
+              headline6: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w800,
                 fontSize: 20.0,
@@ -147,7 +147,7 @@ class App extends StatelessWidget {
               color: Colors.white,
             ),
             textTheme: TextTheme(
-              title: TextStyle(
+              headline6: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w800,
                 fontSize: 20.0,

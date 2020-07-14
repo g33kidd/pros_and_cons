@@ -20,6 +20,12 @@ class DecisionsModel extends ChangeNotifier {
     decision = Decision();
   }
 
+  void setDecision(Decision decision) {
+    print(decision.arguments);
+    decision = decision;
+    notifyListeners();
+  }
+
   /// Removes an option from the current decision being edited.
   void deleteOption(Option option) {
     decision.arguments.remove(option);

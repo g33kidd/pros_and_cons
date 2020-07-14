@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/util.dart';
@@ -94,6 +95,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                 color: purple,
                 textColor: Colors.white,
                 onPressed: () async {
+                  // TODO user ID should go here, so you can DM them eventually.
                   await Firestore.instance.collection('suggestions').add({
                     'title': title,
                     'suggestion': body,

@@ -37,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text("Lobby Chat", style: Display.titleStyle),
+        title: Text("#lobby", style: Display.titleStyle),
       ),
       body: Container(
         height: double.infinity,

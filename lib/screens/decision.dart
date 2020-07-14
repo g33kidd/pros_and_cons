@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
+import 'package:pros_cons/model/decisions_model.dart';
+import 'package:pros_cons/screens/edit_decision.dart';
 import 'package:pros_cons/widgets/app_scaffold.dart';
 import 'package:pros_cons/widgets/result_card.dart';
 import 'package:pros_cons/widgets/share_button.dart';
@@ -42,6 +44,29 @@ class DecisionResultsScreen extends StatelessWidget {
 
     return AppScaffold(
       title: "RESULTS",
+      actions: <Widget>[
+        FlatButton.icon(
+          icon: Icon(
+            Icons.mode_edit,
+            size: 16.0,
+            color: Colors.white,
+          ),
+          label: Text(
+            "EDIT",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditDecisionScreen(decision: decision),
+              ),
+            );
+          },
+        ),
+      ],
       body: ListView(
         padding: EdgeInsets.all(18.0),
         children: <Widget>[
