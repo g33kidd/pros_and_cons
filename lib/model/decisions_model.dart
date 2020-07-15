@@ -5,7 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:pros_cons/model/decision.dart';
 
 class DecisionsModel extends ChangeNotifier {
-  Decision decision;
+  Decision _decision;
+
+  Decision get decision => _decision;
+
+  set decision(Decision value) {
+    _decision = value;
+    notifyListeners();
+  }
 
   UnmodifiableListView<Option> get options =>
       UnmodifiableListView<Option>(decision.arguments);
@@ -18,12 +25,6 @@ class DecisionsModel extends ChangeNotifier {
 
   DecisionsModel() {
     decision = Decision();
-  }
-
-  void setDecision(Decision decision) {
-    print(decision.arguments);
-    decision = decision;
-    notifyListeners();
   }
 
   /// Removes an option from the current decision being edited.

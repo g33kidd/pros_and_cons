@@ -34,6 +34,7 @@ class ArgumentEditor extends StatefulWidget {
 class _ArgumentEditorState extends State<ArgumentEditor> {
   Option option;
   TextEditingController _textEditingController;
+  FocusNode focusNode = FocusNode();
 
   _ArgumentEditorState(this.option) {
     _textEditingController = TextEditingController(text: option.title);
@@ -42,6 +43,7 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
   @override
   void initState() {
     super.initState();
+    // focusNode.requestFocus();
   }
 
   @override
@@ -85,7 +87,7 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
                 child: TextField(
                   textCapitalization: TextCapitalization.sentences,
                   controller: _textEditingController,
-                  focusNode: widget.focusNode,
+                  focusNode: focusNode,
                   style: TextStyle(
                     color: darkMode ? Colors.white : Colors.black,
                   ),

@@ -95,6 +95,8 @@ class Decision {
   //       .snapshots()
   // }
 
+  static Future<DocumentReference> update(Map<String, dynamic> data) async {}
+
   static Future<DocumentReference> insert(Map<String, dynamic> data) async {
     return await Firestore.instance.collection('decisions').add(data);
   }

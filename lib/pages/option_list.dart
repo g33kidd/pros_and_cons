@@ -8,10 +8,12 @@ import 'package:provider/provider.dart';
 
 class OptionListPage extends StatefulWidget {
   final Function onChanged;
+  final Decision decision;
 
   OptionListPage({
     Key key,
     this.onChanged,
+    this.decision,
   }) : super(key: key);
 
   @override
@@ -25,6 +27,13 @@ class _OptionListPageState extends State<OptionListPage> {
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(Duration.zero, () async {
+      print(widget.decision.argumentsList);
+      Provider.of<DecisionsModel>(context).decision = widget.decision;
+      print("updating decision in state");
+      await Future.delayed(Duration.zero);
+    });
   }
 
   @override
@@ -57,6 +66,8 @@ class _OptionListPageState extends State<OptionListPage> {
     return Consumer<DecisionsModel>(builder: (context, decisions, child) {
       final options = decisions.options;
 
+      // print(decisions.decision.toMap());
+
       if (options.length == 0)
         return NoItemsAdded(onPressed: () => addOption(decisions));
 
@@ -77,7 +88,7 @@ class _OptionListPageState extends State<OptionListPage> {
                     option: f,
                     firstItem: index == 0,
                     lastItem: index == options.length - 1,
-                    focusNode: focusNodes[index],
+                    // focusNode: focusNodes[index],
                     onImportanceUpdate: (double value) {
                       f.importance = value;
                       decisions.updateOption(index, f);

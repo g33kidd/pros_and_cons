@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,12 +15,18 @@ import '../util.dart';
 
 class DecisionResultsScreen extends StatelessWidget {
   final Decision decision;
+  final DocumentSnapshot snapshot;
 
-  DecisionResultsScreen({Key key, this.decision}) : super(key: key);
+  DecisionResultsScreen({
+    Key key,
+    this.decision,
+    this.snapshot,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final darkMode = Provider.of<AppModel>(context).darkMode;
+    final decisions = Provider.of<DecisionsModel>(context);
     final total = decision.totalScore;
     final threshold =
         (decision.proScore + decision.conScore) / decision.arguments.length;
@@ -58,10 +65,16 @@ class DecisionResultsScreen extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            Navigator.push(
+            // print(decisions.decision.toMap());
+            print(decision.toMap());
+            // decisions.decision = decision;
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => EditDecisionScreen(decision: decision),
+                builder: (context) => EditDecisionScreen(
+                  decision: decision,
+                  snapshot: snapshot,
+                ),
               ),
             );
           },
@@ -258,7 +271,7 @@ class ArgumentListItem extends StatelessWidget {
           SizedBox(width: 24.0),
           Expanded(
             child: Text(
-              option.title,
+              option.title ?? "Title Not Available",
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16.0,

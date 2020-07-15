@@ -29,7 +29,10 @@ class HistoryItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DecisionResultsScreen(decision: decision),
+            builder: (_) => DecisionResultsScreen(
+              decision: decision,
+              snapshot: snapshot,
+            ),
           ),
         );
       },
