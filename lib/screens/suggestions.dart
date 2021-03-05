@@ -1,24 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pros_cons/model/app_model.dart';
+import 'package:hooks_riverpod/all.dart';
+import 'package:pros_cons/imports.dart';
 import 'package:pros_cons/util.dart';
 import 'package:pros_cons/widgets/app_scaffold.dart';
-import 'package:provider/provider.dart';
 
-class SuggestionScreen extends StatefulWidget {
-  @override
-  _SuggestionScreenState createState() => _SuggestionScreenState();
-}
-
-class _SuggestionScreenState extends State<SuggestionScreen> {
-  String title;
-  String body;
-  String email;
-
+class SuggestionScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
+    final email = useTextEditingController();
+    final body = useTextEditingController();
+    final title = useTextEditingController();
+    final darkMode = useProvider(themeProvider).dark;
+    final user = useProvider(userProvider);
+
     return AppScaffold(
       title: "SUGGESTIONS",
       needsSafeArea: true,
@@ -39,11 +34,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
               style: TextStyle(
                 color: darkMode ? Colors.white : Colors.black,
               ),
-              onChanged: (s) {
-                setState(() {
-                  title = s;
-                });
-              },
+              controller: title,
             ),
             SizedBox(height: 20.0),
             Text(
@@ -59,11 +50,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
               style: TextStyle(
                 color: darkMode ? Colors.white : Colors.black,
               ),
-              onChanged: (s) {
-                setState(() {
-                  email = s;
-                });
-              },
+              controller: email,
             ),
             SizedBox(height: 20.0),
             Text(
@@ -78,14 +65,10 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
             TextField(
               keyboardType: TextInputType.multiline,
               maxLines: 10,
+              controller: body,
               style: TextStyle(
                 color: darkMode ? Colors.white : Colors.black,
               ),
-              onChanged: (s) {
-                setState(() {
-                  body = s;
-                });
-              },
             ),
             SizedBox(height: 20.0),
             Builder(builder: (context) {
@@ -95,10 +78,12 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                 color: purple,
                 textColor: Colors.white,
                 onPressed: () async {
-                  // TODO user ID should go here, so you can DM them eventually.
-                  await Firestore.instance.collection('suggestions').add({
+                  await FirebaseFirestore.instance
+                      .collection('suggestions')
+                      .add({
                     'title': title,
                     'suggestion': body,
+                    'user_id': user.firebaseAuth.currentUser.uid,
                     'email': email,
                   });
                   Scaffold.of(context).showSnackBar(

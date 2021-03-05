@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 final Color purple = Color(0xFF7665E6);
+final Color pink = Color(0xFFEF66B0);
+final Color darkPurple = Color(0xFF270B77);
 
 final Color red = Color(0xFFD05959);
 final Color green = Color(0xFF4DBE54);
@@ -16,7 +18,7 @@ String describeScore(score) {
 
 // Shows a snackbar with a specific theme.
 void showSnackbar(BuildContext context) {
-  Scaffold.of(context).showSnackBar(
+  ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       backgroundColor: purple,
       content: Text(

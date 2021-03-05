@@ -1,36 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:pros_cons/model/app_model.dart';
+import 'package:pros_cons/imports.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/util.dart';
-import 'package:provider/provider.dart';
 
-class Switcher extends StatefulWidget {
-  final void Function(OptionType) onChanged;
+class Switcher extends HookWidget {
+  final void Function(OptionType) onChange;
   final OptionType type;
 
   Switcher({
     Key key,
-    this.onChanged,
+    this.onChange,
     this.type,
   }) : super(key: key);
 
   @override
-  _SwitcherState createState() => _SwitcherState();
-}
-
-class _SwitcherState extends State<Switcher> {
-  bool get isPro => widget.type == OptionType.PRO;
-
-  bool get isCon => widget.type == OptionType.CON;
-
-  @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
+    final isPro = type == OptionType.PRO;
+    final isCon = type == OptionType.CON;
+
     final TextStyle _style = TextStyle(
       fontSize: 23.5,
       color: Colors.white,
       fontWeight: FontWeight.w800,
     );
+
+    void onTap(OptionType type) => onChange(type);
 
     final padding = EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0);
 
@@ -63,6 +57,4 @@ class _SwitcherState extends State<Switcher> {
       ),
     );
   }
-
-  onTap(OptionType type) => widget.onChanged(type);
 }

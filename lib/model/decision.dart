@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +19,25 @@ OptionType getOptionTypeFromString(String value) {
   );
 }
 
-class Decision {
+class DecisionScore {
+  static double threshold;
+
+  final double pro;
+  final double con;
+  final double total;
+
+  DecisionScore({this.pro, this.con, this.total});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'pro': pro,
+      'con': con,
+      'total': total,
+    };
+  }
+}
+
+class Decision extends ChangeNotifier {
   String documentID;
   DateTime created;
   String objective = "";
@@ -29,13 +46,10 @@ class Decision {
   List<Option> arguments = [];
   List<Option> pros = [];
   List<Option> cons = [];
-  double proScore = 0;
-  double conScore = 0;
-  double totalScore = 0;
 
   String get key => created.toIso8601String();
 
-  Color get scoreTextColor => totalScore < 0 ? red : green;
+  Color get scoreTextColor => score.total < 0 ? red : green;
   Color get moodTextColor =>
       (mood != Mood.MEH) ? (mood == Mood.HAPPY ? green : red) : Colors.orange;
 
@@ -53,30 +67,41 @@ class Decision {
         };
       }).toList();
 
+  void updateOption(index, Option option) {
+    arguments[index] = option;
+    notifyListeners();
+  }
+
+  void deleteOptionAt(index) {
+    arguments.removeAt(index);
+    notifyListeners();
+  }
+
+  void addOption() {
+    arguments.add(Option(
+      importance: 5,
+      type: OptionType.CON,
+    ));
+
+    notifyListeners();
+  }
+
   Decision() {
     created = DateTime.now();
   }
 
-  Map<String, double> buildScore() {
-    double pscore = 0;
-    double cscore = 0;
+  DecisionScore get score {
+    double proScore = 0;
+    double conScore = 0;
 
-    getPros.forEach((p) {
-      pscore += p.importance;
-    });
-    getCons.forEach((p) {
-      cscore += p.importance;
-    });
+    getPros.forEach((element) => proScore += element.importance);
+    getCons.forEach((element) => conScore += element.importance);
 
-    proScore = pscore;
-    conScore = cscore;
-    totalScore = proScore - conScore;
-
-    return {
-      "pro": pscore,
-      "con": cscore,
-      "total": totalScore,
-    };
+    return DecisionScore(
+      pro: proScore,
+      con: conScore,
+      total: proScore - conScore,
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -95,15 +120,20 @@ class Decision {
   //       .snapshots()
   // }
 
-  static Future<DocumentReference> update(Map<String, dynamic> data) async {}
+  // static Future<DocumentReference> update(Map<String, dynamic> data) async {}
+
+  static CollectionReference get collection =>
+      FirebaseFirestore.instance.collection('decisions');
+
+  // FirebaseFirestore.instance.collection('decisions');
 
   static Future<DocumentReference> insert(Map<String, dynamic> data) async {
-    return await Firestore.instance.collection('decisions').add(data);
+    return await collection.add(data);
   }
 
   static Decision fromSnapshot(DocumentSnapshot snapshot) {
-    var decision = fromMap(snapshot.data);
-    decision.documentID = snapshot.documentID;
+    var decision = fromMap(snapshot.data());
+    decision.documentID = snapshot.id;
     return decision;
   }
 
@@ -111,9 +141,6 @@ class Decision {
     Decision decision = Decision();
     decision.objective = doc['objective'];
     decision.mood = getMoodFromString(doc['mood']);
-    decision.conScore = doc['score']['con'];
-    decision.proScore = doc['score']['pro'];
-    decision.totalScore = doc['score']['total'];
     decision.created = (doc['created'] as Timestamp).toDate();
     doc['arguments'].forEach((f) {
       decision.arguments.add(Option(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:pros_cons/model/app_model.dart';
+import 'package:hooks_riverpod/all.dart';
+import 'package:pros_cons/imports.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/widgets/switcher.dart';
 import 'package:pros_cons/util.dart';
-import 'package:provider/provider.dart';
 
-class ArgumentEditor extends StatefulWidget {
+class ArgumentEditor extends HookWidget {
   final bool firstItem;
   final bool lastItem;
   final Option option;
@@ -13,7 +13,6 @@ class ArgumentEditor extends StatefulWidget {
   final void Function(OptionType) onTypeChanged;
   final void Function(double) onImportanceUpdate;
   final Function onDeletePressed;
-  final FocusNode focusNode;
 
   ArgumentEditor({
     Key key,
@@ -24,42 +23,24 @@ class ArgumentEditor extends StatefulWidget {
     this.onTextChanged,
     this.onImportanceUpdate,
     this.onTypeChanged,
-    this.focusNode,
   }) : super(key: ObjectKey(option));
 
   @override
-  _ArgumentEditorState createState() => _ArgumentEditorState(option);
-}
-
-class _ArgumentEditorState extends State<ArgumentEditor> {
-  Option option;
-  TextEditingController _textEditingController;
-  FocusNode focusNode = FocusNode();
-
-  _ArgumentEditorState(this.option) {
-    _textEditingController = TextEditingController(text: option.title);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // focusNode.requestFocus();
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
+    // final focusNode = useFocusNode();
+
+    // useEffect(() {
+    //   focusNode.requestFocus();
+    // }, []);
+
+    final darkMode = useProvider(themeProvider).dark;
+    final textEdit = useTextEditingController(text: option.title);
+
     EdgeInsetsGeometry padding = EdgeInsets.only(
       left: 16.0,
       right: 16.0,
-      top: widget.firstItem ? 16.0 : 0.0,
-      bottom: widget.lastItem ? 16.0 : 0.0,
+      top: firstItem ? 16.0 : 0.0,
+      bottom: lastItem ? 16.0 : 0.0,
     );
 
     final sliderLabelStyle = TextStyle(
@@ -79,15 +60,14 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Switcher(
-                onChanged: onTypeSwitched,
+                onChange: onTypeChanged,
                 type: option.type,
               ),
               SizedBox(width: 4.0),
               Flexible(
                 child: TextField(
                   textCapitalization: TextCapitalization.sentences,
-                  controller: _textEditingController,
-                  focusNode: focusNode,
+                  controller: textEdit,
                   style: TextStyle(
                     color: darkMode ? Colors.white : Colors.black,
                   ),
@@ -109,7 +89,7 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
           Slider(
             value: option.importance,
             divisions: 10,
-            onChanged: (i) => widget.onImportanceUpdate(i),
+            onChanged: (i) => onImportanceUpdate(i),
             min: 0,
             max: 10,
             label: "${option.importance.toInt()} Importance",
@@ -134,15 +114,4 @@ class _ArgumentEditorState extends State<ArgumentEditor> {
       ),
     );
   }
-
-  void onTextChanged(String value) {
-    _textEditingController.value =
-        _textEditingController.value.copyWith(text: value);
-
-    widget.onTextChanged(_textEditingController.value.text);
-  }
-
-  void onDeletePressed() => widget.onDeletePressed();
-
-  void onTypeSwitched(OptionType type) => widget.onTypeChanged(type);
 }

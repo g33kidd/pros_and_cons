@@ -2,12 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/all.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
+import 'package:pros_cons/imports.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/screens/chat/message.dart';
 import 'package:pros_cons/util.dart';
-import 'package:provider/provider.dart';
+
+// TODO reimplement the decision selection when creating a message.
 
 class MessageBuilder extends StatefulWidget {
   final Function onSendMessage;
@@ -19,6 +22,7 @@ class MessageBuilder extends StatefulWidget {
 }
 
 class _MessageBuilderState extends State<MessageBuilder> {
+  Function onSendMessage;
   Decision decision;
   TextEditingController textEditingController = TextEditingController();
   FocusNode focusNode = FocusNode();
@@ -30,7 +34,7 @@ class _MessageBuilderState extends State<MessageBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
+    final darkMode = useProvider(themeProvider).dark;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,9 +61,13 @@ class _MessageBuilderState extends State<MessageBuilder> {
                   showBottomSheet(
                     context: context,
                     builder: (context) {
-                      final app = Provider.of<AppModel>(context);
+                      final app = useProvider(appProvider);
+                      final topPadding = MediaQuery.of(context).padding.top;
                       return Container(
-                        padding: EdgeInsets.all(16.0),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 32,
+                        ),
                         color: purple,
                         child: StreamBuilder(
                           stream: Firestore.instance
@@ -155,17 +163,17 @@ class _MessageBuilderState extends State<MessageBuilder> {
     );
   }
 
-  sendMessage() {
+  sendMessage() async {
     if (textEditingController.text.trim() != '') {
       var text = textEditingController.text.trim();
-      var docRef = Firestore.instance
+      var docRef = FirebaseFirestore.instance
           .collection('messages')
-          .document('lobby')
+          .doc('lobby')
           .collection('lobby')
-          .document();
+          .doc();
 
-      Firestore.instance.runTransaction((transaction) async {
-        FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        User user = FirebaseAuth.instance.currentUser;
         Map<String, dynamic> values = {
           'user_id': user.uid,
           'text': text,
@@ -174,13 +182,13 @@ class _MessageBuilderState extends State<MessageBuilder> {
 
         if (decision != null) {
           values.addAll({
-            'decision':
-                Firestore.instance.document("decisions/" + decision.documentID)
+            'decision': FirebaseFirestore.instance
+                .doc("decisions/" + decision.documentID)
           });
         }
 
         // return;
-        await transaction.set(docRef, values);
+        transaction.set(docRef, values);
         setState(() {
           decision = null;
         });
@@ -189,5 +197,64 @@ class _MessageBuilderState extends State<MessageBuilder> {
       textEditingController.clear();
       widget.onSendMessage();
     }
+  }
+}
+
+class NewMessageBuilder extends HookWidget {
+  final Function onSendMessage;
+
+  NewMessageBuilder({
+    Key key,
+    @required this.onSendMessage,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final chat = useProvider(chatProvider);
+    final darkMode = useProvider(themeProvider).dark;
+    final msgTextController = useTextEditingController();
+    final focusNode = useFocusNode();
+
+    sendMessage() {
+      chat.sendMessage(msgTextController.value.text.trim());
+      msgTextController.clear();
+      onSendMessage();
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          color: Colors.grey[100],
+          padding: EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              SizedBox(width: 12),
+              Flexible(
+                child: TextField(
+                  controller: msgTextController,
+                  focusNode: focusNode,
+                  style: TextStyle(
+                    color: darkMode ? Colors.white : Colors.black,
+                    fontSize: 15,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: "What do you want to say?",
+                    // contentPadding: EdgeInsets.all(12),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.send, color: purple),
+                padding: EdgeInsets.symmetric(horizontal: 18.0),
+                onPressed: () => sendMessage(),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }

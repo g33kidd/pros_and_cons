@@ -1,19 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/all.dart';
 import 'package:intl/intl.dart';
-import 'package:pros_cons/model/app_model.dart';
+import 'package:pros_cons/imports.dart';
 import 'package:pros_cons/model/decision.dart';
-import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/screens/edit_decision.dart';
 import 'package:pros_cons/widgets/app_scaffold.dart';
 import 'package:pros_cons/widgets/result_card.dart';
 import 'package:pros_cons/widgets/share_button.dart';
-import 'package:provider/provider.dart';
 
 import '../util.dart';
 
-class DecisionResultsScreen extends StatelessWidget {
+class DecisionResultsScreen extends HookWidget {
   final Decision decision;
   final DocumentSnapshot snapshot;
 
@@ -25,15 +23,14 @@ class DecisionResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
-    final decisions = Provider.of<DecisionsModel>(context);
-    final total = decision.totalScore;
+    final darkMode = useProvider(themeProvider).dark;
+    final total = decision.score.total;
     final threshold =
-        (decision.proScore + decision.conScore) / decision.arguments.length;
+        (decision.score.pro + decision.score.con) / decision.arguments.length;
 
     // TODO this was just a quick workup, improve and move this elsewhere.
     String result = "";
-    if (decision.totalScore < -threshold) {
+    if (decision.score.total < -threshold) {
       result = "Probably Shouldn't";
     } else if (total >= -threshold && total < 0) {
       result = "I'd say no.";
@@ -185,7 +182,7 @@ class DecisionResultsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12.0),
                   Text(
-                    decision.proScore.toStringAsFixed(0),
+                    decision.score.pro.toStringAsFixed(0),
                     style: TextStyle(
                       fontSize: 32.0,
                       color: darkMode ? Colors.white : Colors.black,
@@ -207,7 +204,7 @@ class DecisionResultsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12.0),
                   Text(
-                    decision.conScore.toStringAsFixed(0),
+                    decision.score.con.toStringAsFixed(0),
                     style: TextStyle(
                       fontSize: 32.0,
                       color: darkMode ? Colors.white : Colors.black,
@@ -228,7 +225,7 @@ class DecisionResultsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 12.0),
                   Text(
-                    decision.totalScore.toStringAsFixed(0),
+                    decision.score.total.toStringAsFixed(0),
                     style: TextStyle(
                       fontSize: 32.0,
                       fontWeight: FontWeight.w900,
@@ -247,14 +244,14 @@ class DecisionResultsScreen extends StatelessWidget {
   }
 }
 
-class ArgumentListItem extends StatelessWidget {
+class ArgumentListItem extends HookWidget {
   final Option option;
 
   ArgumentListItem({this.option});
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
+    final darkMode = useProvider(themeProvider).dark;
     return Padding(
       padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Row(

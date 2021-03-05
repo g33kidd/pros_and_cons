@@ -1,145 +1,94 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:pros_cons/components/new_decision_button.dart';
-import 'package:pros_cons/model/app_model.dart';
-import 'package:pros_cons/model/decisions_model.dart';
-import 'package:pros_cons/widgets/app_drawer.dart';
-import 'package:pros_cons/widgets/app_scaffold.dart';
-import 'package:pros_cons/widgets/history_item.dart';
-import 'package:pros_cons/widgets/no_history.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:pros_cons/hooks/page_controller.dart';
+import 'package:pros_cons/screens/new/chat.dart';
+import 'package:pros_cons/screens/new/decisions.dart';
+import 'package:pros_cons/screens/new/home.dart';
+import 'package:pros_cons/screens/new/journal.dart';
+import 'package:pros_cons/screens/new/settings.dart';
+import 'package:pros_cons/util.dart';
 
-import '../util.dart';
-
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+class NewHome extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final app = Provider.of<AppModel>(context);
-    final query = Firestore.instance
-        .collection('decisions')
-        .where('udid', isEqualTo: app.udid)
-        .orderBy('created', descending: true)
-        .snapshots();
+    final currentIndex = useState(2);
+    final pageController = usePageController(initialPage: 2);
 
-    return AppScaffold(
-      title: "PROS & CONS",
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.chat_bubble_outline),
-          onPressed: () => {Navigator.pushNamed(context, "/Chat")},
+    return Scaffold(
+      // TODO this drawer is for selecting channels,
+      // however, might have more drawers for other pages.
+      // drawer: currentIndex.value == 4 ? Offstage() : Drawer(),
+      body: SizedBox.expand(
+        child: PageView(
+          controller: pageController,
+          physics: NeverScrollableScrollPhysics(),
+          onPageChanged: (index) {
+            currentIndex.value = index;
+          },
+          children: <Widget>[
+            HomePage(),
+            JournalPage(),
+            DecisionsPage(),
+            ChatPage(),
+            SettingsPage(),
+          ],
         ),
-      ],
-      drawer: AppDrawer(),
-      body: StreamBuilder(
-        stream: query,
-        builder: (_, AsyncSnapshot<QuerySnapshot> snapshot) {
-          return HistoryBuilder(snapshot: snapshot);
-        },
       ),
-    );
-  }
-}
-
-class HistoryBuilder extends StatelessWidget {
-  final AsyncSnapshot<QuerySnapshot> snapshot;
-  HistoryBuilder({Key key, this.snapshot}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    if (snapshot.hasError)
-      return Center(
-        child: Text("Whoops... there was an error!"),
-      );
-
-    if (snapshot.hasData)
-      return HistoryList(
-        documents: snapshot.data.documents,
-      );
-
-    return Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-}
-
-class HistoryList extends StatelessWidget {
-  final List<DocumentSnapshot> documents;
-
-  HistoryList({Key key, this.documents}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final decisions = Provider.of<DecisionsModel>(context);
-
-    if (documents.length > 0)
-      return Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-              top: 16.0,
-              left: 12.0,
-              right: 12.0,
-            ),
-            child: NewDecisionButton(
-              onPressed: () {
-                FirebaseAnalytics().logEvent(
-                  name: "new_decision",
-                  parameters: {'position': "history_list"},
-                );
-                decisions.newDecision();
-                Navigator.pushNamed(context, "/Create");
-              },
-            ),
+      bottomNavigationBar: BottomNavyBar(
+        backgroundColor: purple,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        showElevation: false,
+        itemCornerRadius: 6,
+        animationDuration: Duration(milliseconds: 250),
+        curve: Curves.easeInOutExpo,
+        selectedIndex: currentIndex.value,
+        onItemSelected: (index) {
+          currentIndex.value = index;
+          pageController.animateToPage(
+            index,
+            duration: Duration(milliseconds: 250),
+            curve: Curves.easeInOutQuad,
+          );
+        },
+        items: [
+          BottomNavyBarItem(
+            icon: Icon(Icons.apps),
+            title: Text('Posts'),
+            activeColor: Colors.white,
+            textAlign: TextAlign.center,
+            inactiveColor: darkPurple,
           ),
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(12.0),
-              shrinkWrap: true,
-              itemCount: documents.length,
-              itemBuilder: (context, index) => HistoryItem(
-                snapshot: documents[index],
-                onDelete: () async {
-                  Navigator.pop(context, true);
-                  Scaffold.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: purple,
-                      duration: Duration(
-                        milliseconds: 800,
-                      ),
-                      content: Text(
-                        "Successfully deleted the decision!",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  );
-                  await documents[index].reference.delete();
-                },
-              ),
-            ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.mode_edit),
+            title: Text('Journal'),
+            textAlign: TextAlign.center,
+            activeColor: Colors.white,
+            inactiveColor: darkPurple,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.lightbulb_outline),
+            textAlign: TextAlign.center,
+            title: Text('Decisions'),
+            activeColor: Colors.white,
+            inactiveColor: darkPurple,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.chat_bubble_outline),
+            title: Text('Chat'),
+            textAlign: TextAlign.center,
+            inactiveColor: darkPurple,
+            activeColor: Colors.white,
+          ),
+          BottomNavyBarItem(
+            icon: Icon(Icons.settings),
+            title: Text('Settings'),
+            textAlign: TextAlign.center,
+            inactiveColor: darkPurple,
+            activeColor: Colors.white,
           ),
         ],
-      );
-
-    return NoHistory();
+      ),
+    );
   }
 }

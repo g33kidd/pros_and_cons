@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:pros_cons/model/app_model.dart';
+import 'package:hooks_riverpod/all.dart';
+import 'package:pros_cons/imports.dart';
 import 'package:pros_cons/model/decision.dart';
-import 'package:pros_cons/screens/decision.dart';
 import 'package:pros_cons/util.dart';
 import 'package:pros_cons/widgets/mood_icon.dart';
-import 'package:provider/provider.dart';
 
-class HistoryItem extends StatelessWidget {
+class HistoryItem extends HookWidget {
   final Function onDelete;
   final DocumentSnapshot snapshot;
 
@@ -20,21 +19,21 @@ class HistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
+    final darkMode = useProvider(themeProvider).dark;
     Decision decision = Decision.fromSnapshot(snapshot);
-    final description = describeScore(decision.totalScore);
+    final description = describeScore(decision.score.total);
     return GestureDetector(
       onTap: () {
         HapticFeedback.lightImpact();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => DecisionResultsScreen(
-              decision: decision,
-              snapshot: snapshot,
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (_) => DecisionResultsScreen(
+        //       decision: decision,
+        //       snapshot: snapshot,
+        //     ),
+        //   ),
+        // );
       },
       onLongPress: () async {
         HapticFeedback.mediumImpact();
@@ -103,10 +102,10 @@ class HistoryItem extends StatelessWidget {
             ),
             SizedBox(width: 12.0),
             Text(
-              "$description (${decision.totalScore.toStringAsFixed(0)})",
+              "$description (${decision.score.total.toStringAsFixed(0)})",
               style: TextStyle(
                 fontSize: 16.0,
-                color: (decision.totalScore > 0) ? Colors.green : Colors.red,
+                color: (decision.score.total > 0) ? Colors.green : Colors.red,
                 fontWeight: FontWeight.w800,
               ),
             ),

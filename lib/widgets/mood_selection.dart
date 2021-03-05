@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/decision.dart';
 
+// TODO Do the Emoji thing and get rid of the ugly originaly icons :)
+// emoji:happy - for Firestore...
+
 class MoodSelection extends StatefulWidget {
   final Function onChanged;
 

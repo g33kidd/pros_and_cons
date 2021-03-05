@@ -1,38 +1,31 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/all.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:pros_cons/util.dart';
 import 'package:pros_cons/widgets/button_base.dart';
 import 'package:pros_cons/widgets/result_card.dart';
-import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 import '../display.dart';
+import '../imports.dart';
 
-class ResultsPage extends StatefulWidget {
-  @override
-  _ResultsPageState createState() => _ResultsPageState();
-}
-
-class _ResultsPageState extends State<ResultsPage> {
+class ResultsPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
-    final decisions = Provider.of<DecisionsModel>(context);
-    final decision = decisions.decision;
+    final decision = useProvider(decisionsProvider).createDecision;
+    final darkMode = useProvider(themeProvider).dark;
 
-    decision.buildScore();
-
-    final total = decision.totalScore;
+    final total = decision.score.total;
     final threshold =
-        (decision.proScore + decision.conScore) / decision.arguments.length;
+        (decision.score.pro + decision.score.con) / decision.arguments.length;
 
     // TODO this was just a quick workup, improve and move this elsewhere.
     String result = "";
-    if (decision.totalScore < -threshold) {
+    if (decision.score.total < -threshold) {
       result = "Probably Shouldn't";
     } else if (total >= -threshold && total < 0) {
       result = "I'd say no.";
@@ -222,7 +215,7 @@ class _ResultsPageState extends State<ResultsPage> {
                 ),
                 SizedBox(height: 12.0),
                 Text(
-                  decision.proScore.toStringAsFixed(0),
+                  decision.score.pro.toStringAsFixed(0),
                   style: TextStyle(fontSize: 32.0),
                 ),
               ],
@@ -241,7 +234,7 @@ class _ResultsPageState extends State<ResultsPage> {
                 ),
                 SizedBox(height: 12.0),
                 Text(
-                  decision.conScore.toStringAsFixed(0),
+                  decision.score.con.toStringAsFixed(0),
                   style: TextStyle(fontSize: 32.0),
                 ),
               ],
@@ -258,11 +251,11 @@ class _ResultsPageState extends State<ResultsPage> {
                 ),
                 SizedBox(height: 12.0),
                 Text(
-                  decision.totalScore.toStringAsFixed(0),
+                  decision.score.total.toStringAsFixed(0),
                   style: TextStyle(
                     fontSize: 32.0,
                     fontWeight: FontWeight.w900,
-                    color: (decision.totalScore < 0) ? red : green,
+                    color: (decision.score.total < 0) ? red : green,
                   ),
                 ),
               ],
@@ -300,7 +293,11 @@ class _ResultsPageState extends State<ResultsPage> {
           child: Center(
             child: Text(
               "Helpful? Share app with Friends",
-              style: Display.buttonStyle.copyWith(fontSize: 16.0),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         )

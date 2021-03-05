@@ -1,46 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 import 'package:pros_cons/model/decision.dart';
 import 'package:flutter_udid/flutter_udid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AppModel extends ChangeNotifier {
-  bool darkMode = false;
-  bool displayChangelog = true;
-  bool showSupportDialog = true;
+/// This can be deleted I think?
+///
 
-  String lastVersion;
+// class AppModel extends ChangeNotifier {
+//   bool darkMode = false;
+//   bool displayChangelog = true;
+//   bool showSupportDialog = true;
 
-  String udid;
-  String uid;
+//   String lastVersion;
 
-  List<Decision> history = <Decision>[];
+//   String udid;
+//   String uid;
 
-  AppModel() {
-    init();
-  }
+//   List<Decision> history = <Decision>[];
 
-  switchTheme() async {
-    if (!darkMode) {
-      darkMode = true;
-    } else {
-      darkMode = false;
-    }
+//   AppModel() {
+//     init();
+//   }
 
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool("dark_mode", darkMode);
+//   switchTheme() async {
+//     if (!darkMode) {
+//       darkMode = true;
+//     } else {
+//       darkMode = false;
+//     }
 
-    notifyListeners();
-  }
+//     /// this doesn't matter?
+//     final prefs = await SharedPreferences.getInstance();
+//     prefs.setBool("dark_mode", darkMode);
 
-  init() async {
-    udid = await FlutterUdid.udid;
+//     notifyListeners();
+//   }
 
-    final prefs = await SharedPreferences.getInstance();
-    darkMode = prefs.getBool("dark_mode") ?? false;
-    displayChangelog = prefs.getBool("display_changelog") ?? false;
-    // lastVersion = prefs.getString("last_version") ?? ;
+//   init() async {
+//     udid = await FlutterUdid.udid;
 
-    notifyListeners();
-  }
-}
+//     final prefs = await SharedPreferences.getInstance();
+//     darkMode = prefs.getBool("dark_mode") ?? false;
+//     displayChangelog = prefs.getBool("display_changelog") ?? false;
+//     // lastVersion = prefs.getString("last_version") ?? ;
+
+//     notifyListeners();
+//   }
+// }

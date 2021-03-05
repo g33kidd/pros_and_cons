@@ -3,13 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:pros_cons/model/app_model.dart';
+import 'package:hooks_riverpod/all.dart';
+import 'package:pros_cons/imports.dart';
 import 'package:pros_cons/model/decision.dart';
-import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/pages/option_list.dart';
 import 'package:pros_cons/screens/decision.dart';
 import 'package:pros_cons/widgets/app_scaffold.dart';
-import 'package:provider/provider.dart';
 
 class EditDecisionScreen extends StatefulWidget {
   final Decision decision;
@@ -33,8 +32,9 @@ class _EditDecisionScreenState extends State<EditDecisionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final decisions = Provider.of<DecisionsModel>(context);
-    final app = Provider.of<AppModel>(context);
+    final decisions = useProvider(decisionProvider);
+    final app = useProvider(appProvider);
+    final user = useProvider(userProvider);
 
     return AppScaffold(
       title: "Editing Decision",
@@ -56,13 +56,12 @@ class _EditDecisionScreenState extends State<EditDecisionScreen> {
             /// Currently only redirecting in this case so the score will be
             /// updated whenever the user clicks finish.
             print(decisions.decision.toMap());
-            final user = await FirebaseAuth.instance.currentUser();
-            await widget.snapshot.reference.updateData({
+            await widget.snapshot.reference.update({
               'objective': decisions.decision.objective,
               'mood': describeEnum(decisions.decision.mood),
               'udid': app.udid,
               'user_id': user.uid,
-              'score': decisions.decision.buildScore(),
+              'score': decisions.decision.score.toMap(),
               'created': decisions.decision.created.toUtc(),
               'arguments': decisions.decision.argumentsList,
             });
@@ -79,9 +78,7 @@ class _EditDecisionScreenState extends State<EditDecisionScreen> {
           },
         ),
       ],
-      body: OptionListPage(
-        decision: widget.decision,
-      ),
+      body: OptionListPage(),
     );
   }
 }

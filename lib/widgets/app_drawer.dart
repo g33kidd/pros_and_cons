@@ -1,21 +1,21 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/all.dart';
 import 'package:package_info/package_info.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
-import 'package:pros_cons/model/app_model.dart';
-import 'package:provider/provider.dart';
+import 'package:pros_cons/imports.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../util.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final app = Provider.of<AppModel>(context);
+    final theme = useProvider(themeProvider);
     final _tileTextStyle = TextStyle(
       fontWeight: FontWeight.w600,
-      color: app.darkMode ? Colors.white : Colors.black,
+      color: theme.dark ? Colors.white : Colors.black,
     );
 
     final iconColor = Colors.grey;
@@ -23,7 +23,7 @@ class AppDrawer extends StatelessWidget {
     return Drawer(
       elevation: 2.0,
       child: Container(
-        color: app.darkMode ? Colors.grey[900] : Colors.white,
+        color: theme.dark ? Colors.grey[900] : Colors.white,
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
@@ -43,14 +43,13 @@ class AppDrawer extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           IconButton(
-                            color: (!app.darkMode)
-                                ? Colors.grey[900]
-                                : Colors.white,
-                            icon: (!app.darkMode)
+                            color:
+                                (!theme.dark) ? Colors.grey[900] : Colors.white,
+                            icon: (!theme.dark)
                                 ? Icon(Icons.brightness_2)
                                 : Icon(Icons.brightness_7),
                             onPressed: () {
-                              app.switchTheme();
+                              theme.toggle();
                             },
                           ),
                           IconButton(
@@ -135,7 +134,7 @@ class AppDrawer extends StatelessWidget {
                     subtitle: Text(
                       "Support the developer without ads!",
                       style: TextStyle(
-                        color: !app.darkMode ? Colors.black : Colors.grey,
+                        color: !theme.dark ? Colors.black : Colors.grey,
                       ),
                     ),
                     leading: Icon(Icons.block, color: Colors.red),
@@ -173,24 +172,15 @@ class AppDrawer extends StatelessWidget {
   }
 }
 
-class Footer extends StatefulWidget {
-  @override
-  _FooterState createState() => _FooterState();
-}
-
-class _FooterState extends State<Footer> {
-  String version = "";
-  String buildNumber = "";
-
-  @override
-  void initState() {
-    super.initState();
-    getPackageInfo();
-  }
-
+class Footer extends HookWidget {
   @override
   Widget build(BuildContext context) {
-    final darkMode = Provider.of<AppModel>(context).darkMode;
+    final version = useState("");
+    final build = useState("");
+
+    final packageInfo = useFuture(PackageInfo.fromPlatform());
+
+    final darkMode = useProvider(themeProvider).dark;
     TextStyle _footerStyle = TextStyle(
       fontSize: 12.0,
       color: !darkMode ? Colors.grey[850] : Colors.grey,
@@ -200,16 +190,9 @@ class _FooterState extends State<Footer> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text("Made with ❤️ by g33kidd.", style: _footerStyle),
-        Text("Version $version+$buildNumber", style: _footerStyle),
+        if (packageInfo.connectionState == ConnectionState.done)
+          Text("Version ${version.value}+${build.value}", style: _footerStyle),
       ],
     );
-  }
-
-  Future getPackageInfo() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      version = packageInfo.version;
-      buildNumber = packageInfo.buildNumber;
-    });
   }
 }
