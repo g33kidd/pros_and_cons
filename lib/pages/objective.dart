@@ -1,4 +1,3 @@
-import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decisions_model.dart';

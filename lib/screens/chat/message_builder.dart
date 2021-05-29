@@ -62,7 +62,7 @@ class _MessageBuilderState extends State<MessageBuilder> {
                         padding: EdgeInsets.all(16.0),
                         color: purple,
                         child: StreamBuilder(
-                          stream: Firestore.instance
+                          stream: FirebaseFirestore.instance
                               .collection('decisions')
                               .where('udid', isEqualTo: app.udid)
                               .orderBy('created', descending: true)
@@ -75,12 +75,12 @@ class _MessageBuilderState extends State<MessageBuilder> {
                               );
 
                             if (snapshot.hasData) {
-                              if (snapshot.data.documents.length != 0) {
+                              if (snapshot.data.docs.length != 0) {
                                 return ListView.builder(
-                                  itemCount: snapshot.data.documents.length,
+                                  itemCount: snapshot.data.docs.length,
                                   itemBuilder: (context, index) {
                                     var _decision = Decision.fromSnapshot(
-                                      snapshot.data.documents[index],
+                                      snapshot.data.docs[index],
                                     );
                                     return DecisionCard(
                                       _decision,
@@ -139,6 +139,9 @@ class _MessageBuilderState extends State<MessageBuilder> {
                   ),
                   decoration: InputDecoration(
                     hintText: "Type your message...",
+                    hintStyle: TextStyle(
+                      color: darkMode ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -158,14 +161,14 @@ class _MessageBuilderState extends State<MessageBuilder> {
   sendMessage() {
     if (textEditingController.text.trim() != '') {
       var text = textEditingController.text.trim();
-      var docRef = Firestore.instance
+      var docRef = FirebaseFirestore.instance
           .collection('messages')
-          .document('lobby')
+          .doc('lobby')
           .collection('lobby')
-          .document();
+          .doc();
 
-      Firestore.instance.runTransaction((transaction) async {
-        FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        User user = FirebaseAuth.instance.currentUser;
         Map<String, dynamic> values = {
           'user_id': user.uid,
           'text': text,
@@ -174,13 +177,13 @@ class _MessageBuilderState extends State<MessageBuilder> {
 
         if (decision != null) {
           values.addAll({
-            'decision':
-                Firestore.instance.document("decisions/" + decision.documentID)
+            'decision': FirebaseFirestore.instance
+                .doc("decisions/" + decision.documentID)
           });
         }
 
         // return;
-        await transaction.set(docRef, values);
+        transaction.set(docRef, values);
         setState(() {
           decision = null;
         });

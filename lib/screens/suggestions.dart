@@ -96,7 +96,9 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                 textColor: Colors.white,
                 onPressed: () async {
                   // TODO user ID should go here, so you can DM them eventually.
-                  await Firestore.instance.collection('suggestions').add({
+                  await FirebaseFirestore.instance
+                      .collection('suggestions')
+                      .add({
                     'title': title,
                     'suggestion': body,
                     'email': email,

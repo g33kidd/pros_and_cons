@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pros_cons/display.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decision.dart';
@@ -10,7 +11,6 @@ import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/pages/objective.dart';
 import 'package:pros_cons/pages/option_list.dart';
 import 'package:pros_cons/pages/results.dart';
-import 'package:ads/ads.dart';
 import 'package:pros_cons/widgets/app_scaffold.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +32,15 @@ class _CreateScreenState extends State<CreateScreen> {
   @override
   void initState() {
     super.initState();
+
+    InterstitialAd.load(
+      adUnitId: "ca-app-pub-4846566520266716/9132707300",
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) => ad.show(),
+        onAdFailedToLoad: (error) => print(error),
+      ),
+    );
 
     pageController.addListener(() {
       setState(() {
@@ -81,7 +90,7 @@ class _CreateScreenState extends State<CreateScreen> {
                   'decision_pros': decisions.proArgs.length,
                   'decision_mood': describeEnum(decisions.decision.mood),
                 });
-                final user = await FirebaseAuth.instance.currentUser();
+                final user = FirebaseAuth.instance.currentUser;
                 await Decision.insert({
                   'objective': decisions.decision.objective,
                   'mood': describeEnum(decisions.decision.mood),

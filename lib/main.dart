@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decisions_model.dart';
 import 'package:pros_cons/screens/about.dart';
@@ -15,11 +17,14 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(builder: (_) => AppModel()),
-        ChangeNotifierProvider(builder: (_) => DecisionsModel()),
+        ChangeNotifierProvider(create: (_) => AppModel()),
+        ChangeNotifierProvider(create: (_) => DecisionsModel()),
       ],
       child: App(),
     ),
@@ -39,10 +44,11 @@ class _CheckLoginState extends State<CheckLogin> {
   }
 
   Future checkAnonymousLogin() async {
+    await Firebase.initializeApp();
     await Future.delayed(Duration.zero);
     final user = await FirebaseAuth.instance.signInAnonymously();
     await Future.delayed(Duration(milliseconds: 300));
-    Provider.of<AppModel>(context).uid = user.uid;
+    context.read<AppModel>().uid = user.user.uid;
     if (user != null) return await Navigator.pushNamed(context, "/Home");
   }
 

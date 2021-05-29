@@ -16,7 +16,7 @@ String describeScore(score) {
 
 // Shows a snackbar with a specific theme.
 void showSnackbar(BuildContext context) {
-  Scaffold.of(context).showSnackBar(
+  ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       backgroundColor: purple,
       content: Text(

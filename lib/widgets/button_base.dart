@@ -15,7 +15,7 @@ class ButtonBase extends StatelessWidget {
     this.padding,
   }) : super(key: key);
 
-  _onPressed() {
+  void _onPressed() {
     HapticFeedback.lightImpact();
     onPressed();
   }

@@ -56,8 +56,8 @@ class _EditDecisionScreenState extends State<EditDecisionScreen> {
             /// Currently only redirecting in this case so the score will be
             /// updated whenever the user clicks finish.
             print(decisions.decision.toMap());
-            final user = await FirebaseAuth.instance.currentUser();
-            await widget.snapshot.reference.updateData({
+            final user = FirebaseAuth.instance.currentUser;
+            await widget.snapshot.reference.update({
               'objective': decisions.decision.objective,
               'mood': describeEnum(decisions.decision.mood),
               'udid': app.udid,

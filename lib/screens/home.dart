@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pros_cons/components/new_decision_button.dart';
 import 'package:pros_cons/model/app_model.dart';
 import 'package:pros_cons/model/decisions_model.dart';
@@ -18,20 +19,43 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  BannerAd bannerAd = BannerAd(
+    adUnitId: "ca-app-pub-4846566520266716/6725176015",
+    size: AdSize.banner,
+    request: AdRequest(
+      keywords: [
+        "decisions",
+        "business",
+        "mobile",
+        "life coach",
+        "mental health"
+      ],
+      nonPersonalizedAds: false,
+    ),
+    listener: BannerAdListener(
+      onAdClosed: (ad) => print(ad),
+      onAdFailedToLoad: (ad, error) {
+        print(error);
+      },
+    ),
+  );
+
   @override
   void initState() {
     super.initState();
+    bannerAd.load();
   }
 
   @override
   void dispose() {
     super.dispose();
+    bannerAd.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final app = Provider.of<AppModel>(context);
-    final query = Firestore.instance
+    final query = FirebaseFirestore.instance
         .collection('decisions')
         .where('udid', isEqualTo: app.udid)
         .orderBy('created', descending: true)
@@ -62,15 +86,17 @@ class HistoryBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (snapshot.hasError)
+    if (snapshot.hasError) {
       return Center(
         child: Text("Whoops... there was an error!"),
       );
+    }
 
-    if (snapshot.hasData)
+    if (snapshot.hasData) {
       return HistoryList(
-        documents: snapshot.data.documents,
+        documents: snapshot.data.docs,
       );
+    }
 
     return Center(
       child: CircularProgressIndicator(),
@@ -116,7 +142,7 @@ class HistoryList extends StatelessWidget {
                 snapshot: documents[index],
                 onDelete: () async {
                   Navigator.pop(context, true);
-                  Scaffold.of(context).showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: purple,
                       duration: Duration(

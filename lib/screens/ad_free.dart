@@ -22,15 +22,14 @@ class _AdFreeScreenState extends State<AdFreeScreen> {
       productDetails: _removeAdsProduct,
     );
 
-    await InAppPurchaseConnection.instance.buyConsumable(
+    await InAppPurchase.instance.buyConsumable(
       purchaseParam: purchaseParam,
     );
   }
 
   @override
   void initState() {
-    final Stream purchaseUpdates =
-        InAppPurchaseConnection.instance.purchaseUpdatedStream;
+    final Stream purchaseUpdates = InAppPurchase.instance.purchaseStream;
     _subscription = purchaseUpdates.listen((purchases) {
       _handlePurchaseUpdates(purchases);
     });
@@ -39,13 +38,13 @@ class _AdFreeScreenState extends State<AdFreeScreen> {
   }
 
   Future connect() async {
-    final bool available = await InAppPurchaseConnection.instance.isAvailable();
+    final bool available = await InAppPurchase.instance.isAvailable();
     if (!available) {
       print("Storefront available");
     }
 
     final ProductDetailsResponse response =
-        await InAppPurchaseConnection.instance.queryProductDetails(_productIds);
+        await InAppPurchase.instance.queryProductDetails(_productIds);
 
     if (response.notFoundIDs.isNotEmpty) {
       print("IDs not found!");
@@ -75,7 +74,7 @@ class _AdFreeScreenState extends State<AdFreeScreen> {
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: StreamBuilder(
-          stream: InAppPurchaseConnection.instance.purchaseUpdatedStream,
+          stream: InAppPurchase.instance.purchaseStream,
           builder: (context, AsyncSnapshot<List<PurchaseDetails>> snapshot) {
             return Column(
               mainAxisSize: MainAxisSize.max,

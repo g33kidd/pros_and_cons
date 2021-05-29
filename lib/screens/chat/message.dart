@@ -17,6 +17,7 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(document.data());
     final app = Provider.of<AppModel>(context);
     final sentBySelf = app.uid == document['user_id'];
 
@@ -26,11 +27,6 @@ class Message extends StatelessWidget {
           sentBySelf ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: 8.0),
-        if (!sentBySelf)
-          Padding(
-            padding: EdgeInsets.all(6.0),
-            child: Text("Some Username"),
-          ),
         Container(
           padding: EdgeInsets.all(12.0),
           decoration: BoxDecoration(
@@ -44,21 +40,22 @@ class Message extends StatelessWidget {
             ),
           ),
         ),
-        if (document['decision'] != null)
-          FutureBuilder(
-            future: document['decision'].get(),
-            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.data.exists) {
-                  return DecisionCard(Decision.fromSnapshot(snapshot.data));
-                } else {
-                  return DecisionCard(Decision(), maybeDeleted: true);
-                }
-              } else {
-                return Offstage();
-              }
-            },
-          )
+        // TODO reimplement the decision message section
+        // if (document['decision'] != null)
+        //   FutureBuilder(
+        //     future: document['decision'].get(),
+        //     builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        //       if (snapshot.hasData) {
+        //         if (snapshot.data.exists) {
+        //           return DecisionCard(Decision.fromSnapshot(snapshot.data));
+        //         } else {
+        //           return DecisionCard(Decision(), maybeDeleted: true);
+        //         }
+        //       } else {
+        //         return Offstage();
+        //       }
+        //     },
+        //   )
       ],
     );
   }

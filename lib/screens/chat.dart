@@ -47,9 +47,9 @@ class _ChatScreenState extends State<ChatScreen> {
           children: <Widget>[
             Expanded(
               child: StreamBuilder(
-                stream: Firestore.instance
+                stream: FirebaseFirestore.instance
                     .collection('messages')
-                    .document('lobby')
+                    .doc('lobby')
                     .collection('lobby')
                     .orderBy('timestamp', descending: true)
                     .limit(50)
@@ -62,11 +62,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   } else {
                     return ListView.builder(
                       padding: EdgeInsets.all(10.0),
-                      itemCount: snapshot.data.documents.length,
+                      itemCount: snapshot.data.docs.length,
                       reverse: true,
                       controller: listScrollController,
                       itemBuilder: (context, index) {
-                        return Message(snapshot.data.documents[index]);
+                        return Message(snapshot.data.docs[index]);
                       },
                     );
                   }

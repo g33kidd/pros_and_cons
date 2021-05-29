@@ -34,7 +34,7 @@ class AppScaffold extends StatelessWidget {
     }
 
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(title, style: Display.titleStyle),
         centerTitle: centerTitle ?? false,

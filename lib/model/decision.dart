@@ -98,12 +98,12 @@ class Decision {
   static Future<DocumentReference> update(Map<String, dynamic> data) async {}
 
   static Future<DocumentReference> insert(Map<String, dynamic> data) async {
-    return await Firestore.instance.collection('decisions').add(data);
+    return await FirebaseFirestore.instance.collection('decisions').add(data);
   }
 
   static Decision fromSnapshot(DocumentSnapshot snapshot) {
-    var decision = fromMap(snapshot.data);
-    decision.documentID = snapshot.documentID;
+    var decision = fromMap(snapshot.data());
+    decision.documentID = snapshot.id;
     return decision;
   }
 
